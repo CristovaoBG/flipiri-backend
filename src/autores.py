@@ -1,8 +1,6 @@
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import List
-from activity import Activity
-from travel import Trip
+from bson import ObjectId
 
 @dataclass
 class Feeding:
@@ -14,7 +12,6 @@ class Info:
     name: str
     sex: str
 
-
 @dataclass
 class Hosting:
     date_start: datetime
@@ -24,11 +21,11 @@ class Hosting:
 
 @dataclass
 class Autores:
-    info: Info
-    feeding: Feeding
-    activity_list: list[Activity]
-    hosting: Hosting
-    travel: list[Trip]
+    info: ObjectId
+    feeding: ObjectId
+    activity_list: list[ObjectId]
+    hosting: ObjectId
+    travel: list[ObjectId]
     
     def to_dict(self):
         return asdict(self)
