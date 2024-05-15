@@ -20,7 +20,7 @@ class Activity(DataW):
     name: str
     date: datetime
     duration: datetime
-    authors: list[int]
+    authors: list[ObjectId]
     responsible_author: int
     location: ObjectId
     age_range: ObjectId

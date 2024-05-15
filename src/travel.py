@@ -11,7 +11,6 @@ class Trip(DataW):
     date: datetime
     transportation_type: str
     price: float
-    passenger_list: list[str]
-    #TODO: preço tb?
+    passenger_list: list[ObjectId]
     _id: ObjectId = -1
  

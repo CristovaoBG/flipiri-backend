@@ -4,16 +4,12 @@ from bson import ObjectId
 from wrapper_class import DataW
 from bson import ObjectId
 
-
 @dataclass
-class Feeding(DataW):
-    from_date: datetime
-    to_date: datetime
-    _id: ObjectId = -1
-
-@dataclass
-class Autores(DataW):
-    name: str
-    sex: str
-    feeding: ObjectId
+class Hosting(DataW):
+    date_start: datetime
+    date_end: datetime
+    place: str
+    guest_list: list[ObjectId]
+    vacancies: int = -1
+    price: float = 0.0
     _id: ObjectId = -1
