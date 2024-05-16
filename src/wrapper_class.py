@@ -3,10 +3,13 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from bson import ObjectId
 
+
+DEBUG = True
+
 uri = "mongodb+srv://cristovaobartholo94:307PoKQ0YitxWmGT@cluster0.eisvar1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 client = MongoClient(uri, server_api=ServerApi('1'))
 db = client['flipiri']
-collection = db['data']
+collection = db['debug'] if DEBUG else db['data']
 
 class DataW:
     _class: str
@@ -33,7 +36,9 @@ class DataW:
         if self._id == -1:
             raise KeyError("Documento não existe.")
         js = self.to_dict()
-        modified_count = collection.update_one({js})
+        filter = {'_id': self._id}
+        update = {'$set': js}
+        modified_count = collection.update_one(filter, update)
         print(f'{modified_count = }')
 
     def get_child(self, field):
@@ -48,15 +53,15 @@ class DataW:
         del doc['_class']
         instance.__init__(**doc)
         return instance
-        
+    
+    @staticmethod
+    def drop_hole_collecion():
+        assert DEBUG, "Não se pode dropar uma colection se nao for no modo DEBUG."
+        collection.drop()
+
 #TODO: apagar debug abaixo
 if __name__ == "__main__":
-    from autores import *
-    # info = Info("João Silva", "Masculino")
-    # info.save()
-    info = DataW.from_id(ObjectId('6644d002f3a4438f5c50ea3f'), globals())
-    print(info)
-    print('ok')
+    DataW.drop_hole_collecion()
         
 
 
