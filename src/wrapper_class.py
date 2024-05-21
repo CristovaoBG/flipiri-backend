@@ -2,6 +2,7 @@ from dataclasses import asdict
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from bson import ObjectId
+from pprint import pprint
 
 
 DEBUG = True
@@ -59,9 +60,34 @@ class DataW:
         assert DEBUG, "Não se pode dropar uma colection se nao for no modo DEBUG."
         collection.drop()
 
+    @staticmethod
+    def get_documents_from_class(class_name):
+        docs = collection.find({'_class': class_name})
+        output = {}
+        for doc in docs:
+            # converte os ObjectIds pra string
+            for k in doc.keys():
+                if k == '_id': continue
+                if isinstance(doc[k], ObjectId):
+                    doc[k] = doc[k].__repr__()
+                # se for lista faz o mesmo dentro da lista
+                if isinstance(doc[k], list):
+                    doc[k] = [i.__repr__() if isinstance(i, ObjectId) else i for i in doc[k] ]
+            # insere no output com a chave _id, removendo ela do valor
+            output[str(doc.pop('_id'))] = doc
+        return output
+    
+    @staticmethod
+    def get_every_class_name():
+        return collection.distinct('_class')
+
 #TODO: apagar debug abaixo
 if __name__ == "__main__":
     DataW.drop_hole_collecion()
+    # test = DataW.get_documents_from_class("Feeding")
+    # # pprint(test)
+    # print(DataW.get_every_class_name())
+
         
 
 
