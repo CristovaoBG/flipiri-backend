@@ -1,5 +1,5 @@
 from datetime import datetime
-from autores import *
+from authors import *
 from travel import *
 from activity import *
 from pprint import pprint

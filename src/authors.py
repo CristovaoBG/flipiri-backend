@@ -12,7 +12,7 @@ class Feeding(DataW):
     _id: ObjectId = -1
 
 @dataclass
-class Autores(DataW):
+class Authors(DataW):
     name: str
     sex: str
     feeding: ObjectId
