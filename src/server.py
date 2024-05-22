@@ -1,12 +1,25 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from wrapper_class import DataW
+
+# TODO: os demais imports deviam estar encapsulados em um arquivo?
+from authors import *
+from travel import *
+from activity import *
+from hosting import *
+
 app = Flask(__name__)
 CORS(app)
 
+
+@app.route('/test/', methods=['GET'])
+def test():
+    dataW = DataW.from_id_str(request.args.get('_id'), globals())
+    return dataW.simplified_repr()
+    
+
 @app.route('/get_class/', methods=['GET'])
 def get_class():
-    
     class_name = request.args.get('class_name')
     print(f"pegando classe: {class_name}")
     return jsonify(DataW.get_documents_from_class(class_name))

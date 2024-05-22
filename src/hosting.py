@@ -13,3 +13,5 @@ class Hosting(DataW):
     vacancies: int = -1
     price: float = 0.0
     _id: ObjectId = -1
+    def simplified_repr(self):
+        return (f'{self.place} *')

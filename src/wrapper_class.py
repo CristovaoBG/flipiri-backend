@@ -43,8 +43,11 @@ class DataW:
         print(f'{modified_count = }')
 
     def get_child(self, field):
-        _id = self.to_dict['field']
+        _id = self.to_dict[field]
         return DataW.from_id(_id)
+
+    def simplified_repr(self):
+        return self.to_dict()['_id'].__repr__()
 
     @staticmethod
     def from_id(_id: ObjectId, globals_dic):
@@ -55,6 +58,10 @@ class DataW:
         instance.__init__(**doc)
         return instance
     
+    @staticmethod
+    def from_id_str(_id: str, globals_dic):
+        return DataW.from_id(ObjectId(_id), globals_dic)
+
     @staticmethod
     def drop_hole_collecion():
         assert DEBUG, "Não se pode dropar uma colection se nao for no modo DEBUG."
