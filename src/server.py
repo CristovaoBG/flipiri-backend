@@ -11,13 +11,17 @@ from hosting import *
 app = Flask(__name__)
 CORS(app)
 
+@app.route('/add_author/', methods=['POST'])
+def post_author_data():
+    data = request.get_json()
+    print(data)
+    return jsonify({'message': f"Funcionando maneiro. data: {data}"})
 
 @app.route('/test/', methods=['GET'])
-def test():
+def get_simplified_representation():
     dataW = DataW.from_id_str(request.args.get('_id'), globals())
     return dataW.simplified_repr()
     
-
 @app.route('/get_class/', methods=['GET'])
 def get_class():
     class_name = request.args.get('class_name')
