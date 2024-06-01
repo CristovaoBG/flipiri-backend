@@ -23,7 +23,6 @@ id_autor2 = autor.save()
 
 # primeira atividade
 id_loc = Location("Auditório", "Rua A, 123").save()
-id_agerange = AgeRange(0,10).save()
 autor_list = [id_autor1]
 id_ac1 = Activity("Palestra",
                   datetime(2023, 5, 10),
@@ -31,21 +30,22 @@ id_ac1 = Activity("Palestra",
                   autor_list,
                   id_autor1,
                   id_loc,
-                  id_agerange,
+                  0,
+                  10,
                   "Educação"
                   ).save()
 
 # segunda atividade
 id_loc = Location("Pracinha", "Avenida Paulista").save()
 autor_list = [id_autor1, id_autor2]
-id_agerange = AgeRange(18,100).save()
 id_ac2 = Activity("Palestra",
                   datetime(2023, 5, 10),
                   datetime(2023, 5, 10, 2, 0),
                   autor_list,
                   id_autor2,
                   id_loc,
-                  id_agerange,
+                  18,
+                  100,
                   "Bronhasso"
                   ).save()
 
