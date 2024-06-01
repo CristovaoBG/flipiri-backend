@@ -7,7 +7,9 @@ from pprint import pprint
 
 DEBUG = True
 
+#TODO: esconder isso aqui pra producao:
 uri = "mongodb+srv://cristovaobartholo94:307PoKQ0YitxWmGT@cluster0.eisvar1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
 client = MongoClient(uri, server_api=ServerApi('1'))
 db = client['flipiri']
 collection = db['debug'] if DEBUG else db['data']
@@ -87,6 +89,7 @@ class DataW:
     @staticmethod
     def get_every_class_name():
         return collection.distinct('_class')
+    
 
 #TODO: apagar debug abaixo
 if __name__ == "__main__":

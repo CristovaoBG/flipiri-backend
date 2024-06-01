@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from wrapper_class import DataW
-
+from pprint import pprint
+from utils import str_to_datetime
 # TODO: os demais imports deviam estar encapsulados em um arquivo?
 from authors import *
 from travel import *
@@ -14,7 +15,15 @@ CORS(app)
 @app.route('/add_author/', methods=['POST'])
 def post_author_data():
     data = request.get_json()
-    print(data)
+    # converte Ids
+    data['authors'] = [ObjectId(s['_id']) for s in data['authors']]
+    data['location'] = ObjectId(data['location']['_id'])
+    data['responsible_author'] = ObjectId(data['responsible_author']['_id'])
+    # converte datas
+    data['date_start'] = str_to_datetime(data['date_start'])
+    data['date_end'] = str_to_datetime(data['date_end'])
+    new_activity = Activity(**data)
+    new_activity.save()
     return jsonify({'message': f"Funcionando maneiro. data: {data}"})
 
 @app.route('/test/', methods=['GET'])
@@ -41,6 +50,4 @@ def post_method():
     return jsonify({'message': f"Funcionando maneiro. data: {data}"})
 
 if __name__ == '__main__':
-    app.run(debug=True)
-    # from waitress import serve
-    # serve(app, host="0.0.0.0", port=5000, channel_timeout=600)
+    app.run(debug=True) 
