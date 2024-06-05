@@ -23,8 +23,13 @@ def post_author_data():
     data['date_start'] = str_to_datetime(data['date_start'])
     data['date_end'] = str_to_datetime(data['date_end'])
     new_activity = Activity(**data)
-    new_activity.save()
-    return jsonify({'message': f"Funcionando maneiro. data: {data}"})
+    try:
+        new_activity.save()
+    except KeyError as e:
+        error_msg = str(e)
+        return(jsonify({'success': False, 'error_msg': error_msg}))
+    return(jsonify({'success': True, 'error_msg': "returned no error"}))
+
 
 @app.route('/test/', methods=['GET'])
 def get_simplified_representation():

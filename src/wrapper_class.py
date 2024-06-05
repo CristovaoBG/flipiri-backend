@@ -28,7 +28,7 @@ class DataW:
     def save(self):
         # salva como novo documento
         if self._id != -1:
-            raise KeyError("Documento já existe.")
+           raise KeyError("Documento já existe.")
         self._id = ObjectId()
         js = self.to_dict()        
         inserted_id = collection.insert_one(js).inserted_id
@@ -90,13 +90,20 @@ class DataW:
     def get_every_class_name():
         return collection.distinct('_class')
     
+    @staticmethod
+    def get_items_with_field_value(class_name, field, value):
+        docs = collection.find({'_class': class_name, field: value})
+        return docs
 
 #TODO: apagar debug abaixo
 if __name__ == "__main__":
-    DataW.drop_hole_collecion()
+    #DataW.drop_hole_collecion()
+
     # test = DataW.get_documents_from_class("Feeding")
     # # pprint(test)
     # print(DataW.get_every_class_name())
+
+    DataW.get_items_with_field_value('Activity','category','sete')
 
         
 
