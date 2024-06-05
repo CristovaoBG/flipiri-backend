@@ -29,6 +29,7 @@ class DataW:
         # salva como novo documento
         if self._id != -1:
            raise KeyError("Documento já existe.")
+        self.validate()
         self._id = ObjectId()
         js = self.to_dict()        
         inserted_id = collection.insert_one(js).inserted_id
@@ -51,6 +52,9 @@ class DataW:
     def simplified_repr(self):
         return self.to_dict()['_id'].__repr__()
 
+    def validate(self):
+        return
+
     @staticmethod
     def from_id(_id: ObjectId, globals_dic):
         doc = collection.find_one(_id)
@@ -70,8 +74,8 @@ class DataW:
         collection.drop()
 
     @staticmethod
-    def get_documents_from_class(class_name):
-        docs = collection.find({'_class': class_name})
+    def get_documents_from_class(class_name, filter = {}) -> dict:
+        docs = collection.find({**{'_class': class_name}, **filter})
         output = {}
         for doc in docs:
             # converte os ObjectIds pra string
