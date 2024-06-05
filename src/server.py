@@ -25,7 +25,7 @@ def post_author_data():
     new_activity = Activity(**data)
     try:
         new_activity.save()
-    except KeyError as e:
+    except ValueError as e:
         error_msg = str(e)
         return(jsonify({'success': False, 'error_msg': error_msg}))
     return(jsonify({'success': True, 'error_msg': "returned no error"}))
