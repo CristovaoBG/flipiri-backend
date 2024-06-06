@@ -12,6 +12,13 @@ from hosting import *
 app = Flask(__name__)
 CORS(app)
 
+@app.route('/get_item_from_id/', methods=['GET'])
+def get_item_from_id():
+    _id = request.args.get('_id')    
+    output = DataW.from_id_str(_id, globals()).to_dict()
+    DataW.format_to_frontend(output)
+    return jsonify(output)
+
 @app.route('/add_author/', methods=['POST'])
 def post_author_data():
     data = request.get_json()
@@ -40,7 +47,8 @@ def get_simplified_representation():
 def get_class():
     class_name = request.args.get('class_name')
     print(f"pegando classe: {class_name}")
-    return jsonify(DataW.get_documents_from_class(class_name))
+    output = DataW.get_documents_from_class(class_name)
+    return jsonify(DataW.format_to_frontend(output))
 
 @app.route('/api/', methods=['GET'])
 def get_method():

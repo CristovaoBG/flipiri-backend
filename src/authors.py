@@ -29,16 +29,12 @@ class Authors(DataW):
 
     def get_author_activities_ids(self) ->list[str]:
         docs = DataW.get_documents_from_class("Activity")
-        # otimizavel
-        # return [id for id, activity in docs.items() if self._id in activity['authors']]
         output = []
         for id, activity in docs.items(): 
             print(activity['authors'])
-            # tem que converter pra string por algum motivo
-            if str(self._id) in [act.split('\'')[1] for act in activity['authors']]:
+            if self._id in activity['authors']:
                 output.append(id)
         return output
-                
 
     def is_free_between(self, time_start: datetime, time_end: datetime):
         # pega as proprias atividades
@@ -46,11 +42,10 @@ class Authors(DataW):
         # pega instancia das atividades
         from activity import Activity
         activity_list: list[Activity] = []
-
-        for i, ac in enumerate(activity_id_list): 
-            # obs: lista compreensiva estraga o 'locals()'
+        # obs: lista compreensiva estraga o 'locals()'
+        for i, ac in enumerate(activity_id_list):     
             activity_list.append(DataW.from_id_str(ac, locals()))
-            
+
         is_free = True
         for activity in activity_list:
             if datetimes_have_intersection( time_start,

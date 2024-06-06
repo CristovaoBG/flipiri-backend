@@ -78,14 +78,6 @@ class DataW:
         docs = collection.find({**{'_class': class_name}, **filter})
         output = {}
         for doc in docs:
-            # converte os ObjectIds pra string
-            for k in doc.keys():
-                if k == '_id': continue
-                if isinstance(doc[k], ObjectId):
-                    doc[k] = doc[k].__repr__()
-                # se for lista faz o mesmo dentro da lista
-                if isinstance(doc[k], list):
-                    doc[k] = [i.__repr__() if isinstance(i, ObjectId) else i for i in doc[k] ]
             # insere no output com a chave _id, removendo ela do valor
             output[str(doc.pop('_id'))] = doc
         return output
@@ -98,6 +90,20 @@ class DataW:
     def get_items_with_field_value(class_name, field, value):
         docs = collection.find({'_class': class_name, field: value})
         return docs
+    
+    @staticmethod
+    def format_to_frontend(data):
+        if isinstance(data, list):
+            for id, item in enumerate(data):
+                data[id] = DataW.format_to_frontend(item)
+        if isinstance(data, dict):
+            for key in data.keys():
+                data[key]= DataW.format_to_frontend(data[key])
+        if isinstance(data, ObjectId):
+            return data.__repr__()
+        return data
+
+
 
 #TODO: apagar debug abaixo
 if __name__ == "__main__":
@@ -107,7 +113,9 @@ if __name__ == "__main__":
     # # pprint(test)
     # print(DataW.get_every_class_name())
 
-    DataW.get_items_with_field_value('Activity','category','sete')
+    # DataW.get_items_with_field_value('Activity','category','sete')
+    data = {'a': 'abc', 'b': [1, 2, ObjectId()]}
+    DataW.format_to_frontend(data)
 
         
 
