@@ -35,6 +35,9 @@ def post_author_data():
     except ValueError as e:
         error_msg = str(e)
         return(jsonify({'success': False, 'error_msg': error_msg}))
+    except KeyError as e:
+        error_msg = str(e)
+        return(jsonify({'success': False, 'error_msg': "ERRO INTERNO: " + error_msg}))
     return(jsonify({'success': True, 'error_msg': "returned no error"}))
 
 
