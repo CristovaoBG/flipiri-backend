@@ -54,7 +54,7 @@ class Activity(DataW):
         # raise KeyError("erro")
         if self.date_start > self.date_end:
             raise ValueError("Horários incorretos, "
-                            "o fim do evento aconteceria antes de seu início.")
+                            "o fim do evento está antes de seu início.")
         elif self.date_start == self.date_end:
             raise ValueError("Horários incorretos, o tempo "
                             "de duração do evento é nulo.")
