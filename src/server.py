@@ -19,19 +19,32 @@ def get_item_from_id():
     DataW.format_to_frontend(output)
     return jsonify(output)
 
-@app.route('/add_author/', methods=['POST'])
+@app.route('/delete_entry/', methods=['POST'])
+def delete_item():
+    _id = request.get_json().get('_id')
+    count = DataW.delete_entry(_id)
+    if count != 1:
+        return {'success': False, 'error_msg': f"foram feitas {count} alterações."}
+    return(jsonify({'success': True, 'error_msg': "returned no error"}))
+
+@app.route('/add_activity/', methods=['POST'])
 def post_author_data():
     data = request.get_json()
+    value = data['value']
     # converte Ids
-    data['authors'] = [ObjectId(s['_id']) for s in data['authors']]
-    data['location'] = ObjectId(data['location']['_id'])
-    data['responsible_author'] = ObjectId(data['responsible_author']['_id'])
+    value['authors'] = [ObjectId(s['_id']) for s in value['authors']]
+    value['location'] = ObjectId(value['location']['_id'])
+    value['responsible_author'] = ObjectId(value['responsible_author']['_id'])
     # converte datas
-    data['date_start'] = str_to_datetime(data['date_start'])
-    data['date_end'] = str_to_datetime(data['date_end'])
-    new_activity = Activity(**data)
+    value['date_start'] = str_to_datetime(value['date_start'])
+    value['date_end'] = str_to_datetime(value['date_end'])
+    new_activity = Activity(**value)
     try:
-        new_activity.save()
+        if data['type'] == "new_entry":
+            new_activity.save()
+        else: # edition
+            new_activity._id = ObjectId(value['_id'])
+            new_activity.update()
     except ValueError as e:
         error_msg = str(e)
         return(jsonify({'success': False, 'error_msg': error_msg}))
