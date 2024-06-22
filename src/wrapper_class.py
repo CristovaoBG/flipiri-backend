@@ -103,7 +103,10 @@ class DataW:
             return data.__repr__()
         return data
 
-
+    @staticmethod
+    def delete_entry(_id):
+        result = collection.delete_one({'_id': ObjectId(_id)})
+        return result.deleted_count
 
 #TODO: apagar debug abaixo
 if __name__ == "__main__":
