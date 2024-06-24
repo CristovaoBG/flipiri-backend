@@ -11,12 +11,19 @@ from hosting import *
 
 wrapper_class.DEBUG = True  # feio, mas um pouco mais seguro
 
+# hospedagem
+id_hosting = Hosting(
+                     "Naquele Lugar",
+                     5,
+                     100.0
+                     ).save()
+
 # cria primeiro autor
-autor = Authors("João Silva", "Masculino",datetime(1,1,1), datetime(9999,1,1))
+autor = Authors("João Silva", "Masculino",id_hosting, datetime(1,1,1), datetime(9999,1,1))
 id_autor1 = autor.save()
 
 # outro autor
-autor = Authors("Ana Souza", "Feminino",datetime(1,1,1), datetime(9999,1,1))
+autor = Authors("Ana Souza", "Feminino", id_hosting, datetime(1,1,1), datetime(9999,1,1))
 id_autor2 = autor.save()
 
 # primeira atividade
@@ -52,15 +59,6 @@ id_trip1 = Trip("brasilia", "piri", datetime(2025, 6, 1), "carro", 10.0, [id_aut
 id_trip2 = Trip("piri", "brasilia", datetime(2026, 7, 2), "carro", 15.0, [id_autor1]).save()
 id_trip3 = Trip("rio", "sp", datetime(2025, 8, 10), "avião", 20.0, [id_autor2]).save()
 id_trip4 = Trip("sp", "rio", datetime(2026, 9, 20), "ônibus", 25.0, []).save()
-
-# hospedagem
-id_hosting = Hosting(datetime(2025, 6, 1),
-                     datetime(2025, 6, 3),
-                     "Naquele Lugar",
-                     [id_autor1, id_autor2],
-                     5,
-                     500.0
-                     ).save()
 
 # imprime as coisa tudo
 print("ok")

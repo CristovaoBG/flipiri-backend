@@ -22,12 +22,10 @@ class Authors(DataW): #TODO: pq plural?
     name: str
     sex: str
     # feeding: ObjectId
+    hosting: ObjectId
     arrival: datetime
     departure: datetime
     _id: ObjectId = -1
-    # @property
-    # def feeding(self) -> int:
-    #     return 3
 
     def simplified_repr(self):
         return (f'{self.name} *')
@@ -59,3 +57,9 @@ class Authors(DataW): #TODO: pq plural?
                                             activity.date_end):
                 is_free = False
         return is_free
+
+    def validate(self):
+        if self.departure < self.arrival:
+            raise ValueError("Erro de datas. A data de chegada deve ser "
+                            " anterior a data de partida.")
+            

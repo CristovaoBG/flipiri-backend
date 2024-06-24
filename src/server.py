@@ -12,19 +12,13 @@ from hosting import *
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/add_author/', methods=['POST'])
-def add_author():
-    data = request.get_json()
-    value = data['value']
-    value['arrival'] = str_to_datetime(value['arrival'])
-    value['departure'] = str_to_datetime(value['departure'])
-    new_activity = Authors(**value)
+def save_or_update_data(data_type, data_value, dataW_instance: DataW):
     try:
-        if data['type'] == "new_entry":
-            new_activity.save()
+        if data_type == "new_entry":
+            dataW_instance.save()
         else: # edition
-            new_activity._id = ObjectId(value['_id'])
-            new_activity.update()
+            dataW_instance._id = ObjectId(data_value['_id'])
+            dataW_instance.update()
     except ValueError as e:
         error_msg = str(e)
         return(jsonify({'success': False, 'error_msg': error_msg}))
@@ -32,6 +26,23 @@ def add_author():
         error_msg = str(e)
         return(jsonify({'success': False, 'error_msg': "ERRO INTERNO: " + error_msg}))
     return(jsonify({'success': True, 'error_msg': "returned no error"}))
+
+@app.route('/add_hosting/', methods=['POST'])
+def add_hosting():
+    data = request.get_json()
+    value = data['value']
+    new_activity = Hosting(**value)
+    return save_or_update_data(data['type'], value, new_activity)
+
+@app.route('/add_author/', methods=['POST'])
+def add_author():
+    data = request.get_json()
+    value = data['value']
+    value['arrival'] = str_to_datetime(value['arrival'])
+    value['departure'] = str_to_datetime(value['departure'])
+    value['hosting'] = ObjectId(value['hosting']['_id'])
+    new_activity = Authors(**value)
+    return save_or_update_data(data['type'], value, new_activity)
 
 
 @app.route('/get_item_from_id/', methods=['GET'])
@@ -61,19 +72,7 @@ def add_activity():
     value['date_start'] = str_to_datetime(value['date_start'])
     value['date_end'] = str_to_datetime(value['date_end'])
     new_activity = Activity(**value)
-    try:
-        if data['type'] == "new_entry":
-            new_activity.save()
-        else: # edition
-            new_activity._id = ObjectId(value['_id'])
-            new_activity.update()
-    except ValueError as e:
-        error_msg = str(e)
-        return(jsonify({'success': False, 'error_msg': error_msg}))
-    except KeyError as e:
-        error_msg = str(e)
-        return(jsonify({'success': False, 'error_msg': "ERRO INTERNO: " + error_msg}))
-    return(jsonify({'success': True, 'error_msg': "returned no error"}))
+    return save_or_update_data(data['type'], data['value'], new_activity)
 
 @app.route('/test/', methods=['GET'])
 def get_simplified_representation():
