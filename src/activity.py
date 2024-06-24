@@ -16,7 +16,7 @@ class Location(DataW):
     def validate(self):
         print("validating loc")
 
-    def is_free_between(self, time_start: datetime, time_end: datetime):
+    def is_free_between(self, time_start: datetime, time_end: datetime, ignore: ObjectId):
         # pega as proprias atividades
         activity_id_list =  DataW.get_documents_from_class("Activity",{"location": self._id})
         # pega instancia das atividades
@@ -26,6 +26,7 @@ class Location(DataW):
             activity_list.append(DataW.from_id_str(ac, globals()))
         is_free = True
         for activity in activity_list:
+            if activity._id == ignore: continue
             if datetimes_have_intersection( time_start,
                                             time_end,
                                             activity.date_start,
@@ -63,15 +64,20 @@ class Activity(DataW):
         from authors import Authors
         for auth_id in self.authors:
             auth: Authors = DataW.from_id(auth_id, locals())
-            if not auth.is_free_between(self.date_start, self.date_end):
+            if auth.arrival > self.date_start:
+                raise ValueError(f"O participante \"{auth.name}\" "
+                                 "ainda não estará presente nesse período")
+            elif auth.departure < self.date_end:
+                raise ValueError(f"O participante \"{auth.name}\" "
+                                 "ainda já terá partido nesse período")
+            if not auth.is_free_between(self.date_start, self.date_end, ignore = self._id):
                 raise ValueError(f"O participante \"{auth.name}\" "
                                 "não está disponível nesse período")
         # TODO: deveria validar do autor responsavel tb?
         # valida local
         loc :Location = DataW.from_id(self.location, globals())
         # loc.validate()
-        if (not loc.is_free_between(self.date_start, self.date_end)):
+        if (not loc.is_free_between(self.date_start, self.date_end, ignore = self._id)):
             raise ValueError(f"O local \"{loc.name}\" "
                              "não estará vago nesse período")
 
-    

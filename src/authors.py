@@ -6,23 +6,28 @@ from bson import ObjectId
 from utils import datetimes_have_intersection
 
 
-@dataclass
-class Feeding(DataW):
-    from_date: datetime
-    to_date: datetime
-    _id: ObjectId = -1
-    def simplified_repr(self):
-        dt = self.to_date - self.from_date
-        dt_days = dt.days
-        return (f'Alimentação para {dt_days} dias *')
+# @dataclass
+# class Feeding(DataW):
+#     from_date: datetime
+#     to_date: datetime
+#     _id: ObjectId = -1
+#     def simplified_repr(self):
+#         dt = self.to_date - self.from_date
+#         dt_days = dt.days
+#         return (f'Alimentação para {dt_days} dias *')
 
 
 @dataclass
-class Authors(DataW):
+class Authors(DataW): #TODO: pq plural?
     name: str
     sex: str
-    feeding: ObjectId
+    # feeding: ObjectId
+    arrival: datetime
+    departure: datetime
     _id: ObjectId = -1
+    # @property
+    # def feeding(self) -> int:
+    #     return 3
 
     def simplified_repr(self):
         return (f'{self.name} *')
@@ -36,7 +41,7 @@ class Authors(DataW):
                 output.append(id)
         return output
 
-    def is_free_between(self, time_start: datetime, time_end: datetime):
+    def is_free_between(self, time_start: datetime, time_end: datetime, ignore: ObjectId):
         # pega as proprias atividades
         activity_id_list = self.get_author_activities_ids()
         # pega instancia das atividades
@@ -45,13 +50,12 @@ class Authors(DataW):
         # obs: lista compreensiva estraga o 'locals()'
         for i, ac in enumerate(activity_id_list):     
             activity_list.append(DataW.from_id_str(ac, locals()))
-
         is_free = True
         for activity in activity_list:
+            if activity._id == ignore: continue
             if datetimes_have_intersection( time_start,
                                             time_end,
                                             activity.date_start,
                                             activity.date_end):
                 is_free = False
-                break
         return is_free

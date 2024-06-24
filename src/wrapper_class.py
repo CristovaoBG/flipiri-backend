@@ -39,6 +39,7 @@ class DataW:
     def update(self):
         if self._id == -1:
             raise KeyError("Documento não existe.")
+        self.validate()
         js = self.to_dict()
         filter = {'_id': self._id}
         update = {'$set': js}
@@ -110,15 +111,15 @@ class DataW:
 
 #TODO: apagar debug abaixo
 if __name__ == "__main__":
-    #DataW.drop_hole_collecion()
+    DataW.drop_hole_collecion()
 
     # test = DataW.get_documents_from_class("Feeding")
     # # pprint(test)
     # print(DataW.get_every_class_name())
 
     # DataW.get_items_with_field_value('Activity','category','sete')
-    data = {'a': 'abc', 'b': [1, 2, ObjectId()]}
-    DataW.format_to_frontend(data)
+    # data = {'a': 'abc', 'b': [1, 2, ObjectId()]}
+    # DataW.format_to_frontend(data)
 
         
 

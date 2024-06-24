@@ -12,13 +12,11 @@ from hosting import *
 wrapper_class.DEBUG = True  # feio, mas um pouco mais seguro
 
 # cria primeiro autor
-id_feeding = Feeding(datetime(2023, 5, 1), datetime(2023, 5, 15)).save()
-autor = Authors("João Silva", "Masculino", id_feeding)
+autor = Authors("João Silva", "Masculino",datetime(1,1,1), datetime(9999,1,1))
 id_autor1 = autor.save()
 
 # outro autor
-id_feeding = Feeding(datetime(2023, 5, 1), datetime(2023, 5, 15)).save()
-autor = Authors("Ana Souza", "Feminino", id_feeding)
+autor = Authors("Ana Souza", "Feminino",datetime(1,1,1), datetime(9999,1,1))
 id_autor2 = autor.save()
 
 # primeira atividade
@@ -39,8 +37,8 @@ id_ac1 = Activity("Palestra",
 id_loc = Location("Pracinha", "Avenida Paulista").save()
 autor_list = [id_autor1, id_autor2]
 id_ac2 = Activity("Palestra",
-                  datetime(2023, 5, 10),
-                  datetime(2023, 5, 10, 2, 0),
+                  datetime(2023, 5, 11),
+                  datetime(2023, 5, 11, 2, 0),
                   autor_list,
                   id_autor2,
                   id_loc,

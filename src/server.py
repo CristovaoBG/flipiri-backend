@@ -12,6 +12,28 @@ from hosting import *
 app = Flask(__name__)
 CORS(app)
 
+@app.route('/add_author/', methods=['POST'])
+def add_author():
+    data = request.get_json()
+    value = data['value']
+    value['arrival'] = str_to_datetime(value['arrival'])
+    value['departure'] = str_to_datetime(value['departure'])
+    new_activity = Authors(**value)
+    try:
+        if data['type'] == "new_entry":
+            new_activity.save()
+        else: # edition
+            new_activity._id = ObjectId(value['_id'])
+            new_activity.update()
+    except ValueError as e:
+        error_msg = str(e)
+        return(jsonify({'success': False, 'error_msg': error_msg}))
+    except KeyError as e:
+        error_msg = str(e)
+        return(jsonify({'success': False, 'error_msg': "ERRO INTERNO: " + error_msg}))
+    return(jsonify({'success': True, 'error_msg': "returned no error"}))
+
+
 @app.route('/get_item_from_id/', methods=['GET'])
 def get_item_from_id():
     _id = request.args.get('_id')    
@@ -28,7 +50,7 @@ def delete_item():
     return(jsonify({'success': True, 'error_msg': "returned no error"}))
 
 @app.route('/add_activity/', methods=['POST'])
-def post_author_data():
+def add_activity():
     data = request.get_json()
     value = data['value']
     # converte Ids
@@ -52,7 +74,6 @@ def post_author_data():
         error_msg = str(e)
         return(jsonify({'success': False, 'error_msg': "ERRO INTERNO: " + error_msg}))
     return(jsonify({'success': True, 'error_msg': "returned no error"}))
-
 
 @app.route('/test/', methods=['GET'])
 def get_simplified_representation():
