@@ -27,6 +27,22 @@ def save_or_update_data(data_type, data_value, dataW_instance: DataW):
         return(jsonify({'success': False, 'error_msg': "ERRO INTERNO: " + error_msg}))
     return(jsonify({'success': True, 'error_msg': "returned no error"}))
 
+@app.route('//add_trip//', methods=['POST'])
+def add_Trip():
+    data = request.get_json()
+    value = data['value']
+    value['date'] = str_to_datetime(value['date'])
+    value['passenger_list'] = [ObjectId(s['_id']) for s in value['passenger_list']]
+    new_activity = Trip(**value)
+    return save_or_update_data(data['type'], value, new_activity)
+
+@app.route('//add_location//', methods=['POST'])
+def add_location():
+    data = request.get_json()
+    value = data['value']
+    new_activity = Location(**value)
+    return save_or_update_data(data['type'], value, new_activity)
+
 @app.route('/add_hosting/', methods=['POST'])
 def add_hosting():
     data = request.get_json()
@@ -76,7 +92,7 @@ def add_activity():
 
 @app.route('/test/', methods=['GET'])
 def get_simplified_representation():
-    dataW = DataW.from_id_str(request.args.get('_id'), globals())
+    dataW: DataW = DataW.from_id_str(request.args.get('_id'), globals())
     return dataW.simplified_repr()
     
 @app.route('/get_class/', methods=['GET'])
