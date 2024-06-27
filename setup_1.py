@@ -1,13 +1,13 @@
-import wrapper_class
+import src.wrapper_class as wrapper_class
+from src.authors import *
+from src.travel import *
+from src.activity import *
+from src.hosting import *
 from datetime import datetime
-from authors import *
-from travel import *
-from activity import *
 from pprint import pprint
 from dataclasses import asdict
 from datetime import datetime
 from bson import ObjectId
-from hosting import *
 
 wrapper_class.DEBUG = True  # feio, mas um pouco mais seguro
 
@@ -28,25 +28,23 @@ id_autor2 = autor.save()
 
 # primeira atividade
 id_loc = Location("Auditório", "Rua A, 123").save()
-autor_list = [id_autor1]
-id_ac1 = Activity("Palestra",
-                  datetime(2023, 5, 10),
-                  datetime(2023, 5, 10, 2, 0),
-                  autor_list,
-                  id_autor1,
-                  id_loc,
-                  0,
-                  10,
-                  "Educação"
+id_ac1 = Activity("Palestra",                   # activity name
+                  datetime(2023, 5, 10),        # time start
+                  datetime(2023, 5, 10, 2, 0),  # time end
+                  [id_autor1],                  # authors involved
+                  id_autor1,                    # responsible author
+                  id_loc,                       # location
+                  0,                            # minimum age
+                  10,                           # maximum age
+                  "Educação"                    # category
                   ).save()
 
 # segunda atividade
 id_loc = Location("Pracinha", "Avenida Paulista").save()
-autor_list = [id_autor1, id_autor2]
-id_ac2 = Activity("Palestra",
+autor_list = id_ac2 = Activity("Palestra",
                   datetime(2023, 5, 11),
                   datetime(2023, 5, 11, 2, 0),
-                  autor_list,
+                  [id_autor1, id_autor2],
                   id_autor2,
                   id_loc,
                   18,
