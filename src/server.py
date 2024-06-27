@@ -8,9 +8,15 @@ from authors import *
 from travel import *
 from activity import *
 from hosting import *
+from status import get_status
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route('/get_status/', methods=['GET'])
+def get_status_request():
+    status_label = request.args.get('status_label')
+    return jsonify(get_status(status_label))
 
 def save_or_update_data(data_type, data_value, dataW_instance: DataW):
     try:
