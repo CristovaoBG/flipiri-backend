@@ -1,9 +1,10 @@
-import src.wrapper_class as wrapper_class
-from datetime import datetime
+import wrapper_class
 from authors import *
 from travel import *
 from activity import *
 from hosting import *
+from datetime import datetime
+
 
 wrapper_class.DEBUG = True
 DataW.drop_hole_collecion()
@@ -30,10 +31,12 @@ id_colegio3 = Location("Colégio Comendador Joaquim Alves - Sala 3", "Rua da Edu
 id_colegio4 = Location("Colégio Comendador Joaquim Alves - Sala 4", "Rua da Educação").save()
 id_bebeteca = Location("Bebeteca sala - Centro de Artes e Música Itá e Alaor", "Centro Cultural").save()
 
+id_hosting = Hosting("Pousada padrão", 100, 200).save()
+
 # Criação de autores (simplificado, sem hospedagem)
 autores = {}
 for nome in ["Sarau Literário", "Beto Seabra", "Mauricio", "Clara Arreguy", "Aplam", "Luz Marina", "Rose Costa", "Célia", "Reconto", "Priscila Sabino e Amanda Luz", "Iris Borges", "Mediadora: Lariza Amélia Eloi", "Ana Neila", "ICAE Comunidade", "Liduina, Iris, Mauricio e Clara", "Turma do Caracol", "Débora Bianca", "Matrakaberta (Adriana Maciel)", "CHIQUITAS & BACANAS", "Angela", "André Cerino", "Tricontinando (Ana Neila, Rose Costa e Hozana)", "Hozana Costa", "Reconto (Liduina com o Grupo Reconto)", "Eraldo e Angela", "Iris Borges e Sérgio Pompeo", "Maria das Dores Brigagão", "Jacqueline de Mattos", "Débora Bianca", "Raquel", "Maria Amélia", "SANEAGO", "Marcia Lages", "Turma do Caracol ( Maria e André Cerino)", "Cinco escritoras mulheres da Flipiri", "Angela B. Café", "Diretoria da Casa de Autores e colaboradores / Marcelo Barra"]:
-    autores[nome] = Authors(nome, "Não especificado", None, datetime(1,1,1), datetime(9999,1,1)).save()
+    autores[nome] = Authors(nome, "Não especificado", id_hosting, datetime(1,1,1), datetime(9999,1,1)).save()
 
 # Criação de atividades
 # 12 de Junho
@@ -87,5 +90,7 @@ Activity("Show - Bebeteca", datetime(2023, 6, 15, 16, 30), datetime(2023, 6, 15,
 Activity("Mesa de debates: o livro das Nossas Vidas", datetime(2023, 6, 15, 16, 0), datetime(2023, 6, 15, 18, 0), [autores["Cinco escritoras mulheres da Flipiri"], autores["Mediadora: Lariza Amélia Eloi"]], autores["Mediadora: Lariza Amélia Eloi"], id_teatro2, 0, 100, "Debate").save()
 Activity("Show de Talentos", datetime(2023, 6, 15, 17, 0), datetime(2023, 6, 15, 20, 0), [autores["Angela B. Café"]], autores["Angela B. Café"], id_praca, 0, 100, "Show").save()
 Activity("Cerimônia de Encerramento", datetime(2023, 6, 15, 20, 30), datetime(2023, 6, 15, 22, 30), [autores["Diretoria da Casa de Autores e colaboradores / Marcelo Barra"]], autores["Diretoria da Casa de Autores e colaboradores / Marcelo Barra"], id_praca, 0, 100, "Evento").save()
+
+id_trip1 = Trip("brasilia", "piri", datetime(2025, 6, 1), "carro", 10.0, [autores["Turma do Caracol"]]).save()
 
 print("ok")

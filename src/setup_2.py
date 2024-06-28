@@ -1,8 +1,9 @@
-from datetime import datetime 
-import src.wrapper_class as wrapper_class
-from src.authors import Authors
-from src.activity import Activity, Location
-from src.hosting import Hosting
+import wrapper_class
+from authors import *
+from travel import *
+from activity import *
+from hosting import *
+from datetime import datetime
 
 wrapper_class.DEBUG = True
 

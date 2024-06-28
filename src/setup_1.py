@@ -1,13 +1,10 @@
-import src.wrapper_class as wrapper_class
-from src.authors import *
-from src.travel import *
-from src.activity import *
-from src.hosting import *
+import wrapper_class
+from authors import *
+from travel import *
+from activity import *
+from hosting import *
 from datetime import datetime
-from pprint import pprint
-from dataclasses import asdict
-from datetime import datetime
-from bson import ObjectId
+
 
 wrapper_class.DEBUG = True  # feio, mas um pouco mais seguro
 

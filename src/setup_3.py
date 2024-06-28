@@ -1,9 +1,10 @@
-import src.wrapper_class as wrapper_class
+import wrapper_class
+from authors import *
+from travel import *
+from activity import *
+from hosting import *
 from datetime import datetime
-from src.authors import *
-from src.travel import *
-from src.activity import *
-from src.hosting import *
+
 
 # Ativando modo de depuração
 wrapper_class.DEBUG = True
