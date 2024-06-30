@@ -3,14 +3,18 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from bson import ObjectId
 from pprint import pprint
-
+from pymongo.errors import OperationFailure
 
 DEBUG = True
 
-#TODO: esconder isso aqui pra producao:
-uri = "mongodb+srv://cristovaobartholo94:307PoKQ0YitxWmGT@cluster0.eisvar1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+with open('./key.txt', 'r') as file:
+    uri = file.readline().strip()
 
-client = MongoClient(uri, server_api=ServerApi('1'))
+try:
+    client = MongoClient(uri, server_api=ServerApi('1'))
+except OperationFailure as e:
+    raise OperationFailure("Erro de configuração. A url da chave é válida?")
+
 db = client['flipiri']
 collection = db['debug'] if DEBUG else db['data']
 
@@ -89,7 +93,7 @@ class DataW:
     
     @staticmethod
     def get_items_with_field_value(class_name, field, value):
-        docs = collection.find({'_class': class_name, field: value})
+        docs = list(collection.find({'_class': class_name, field: value}))
         return docs
     
     @staticmethod
@@ -121,6 +125,5 @@ if __name__ == "__main__":
     # data = {'a': 'abc', 'b': [1, 2, ObjectId()]}
     # DataW.format_to_frontend(data)
 
-        
 
 
