@@ -12,4 +12,10 @@ class Hosting(DataW):
     _id: ObjectId = -1
     def simplified_repr(self):
         return (f'{self.name} *')
+
+    def validate(self):
+        same_name_list = DataW.get_items_with_field_value('Hosting', 'name', self.name)
+        if same_name_list:
+            if len(same_name_list) > 1 or same_name_list[0]['_id'] != self._id:
+                raise ValueError("Já existe uma hospedagem com este nome")
     

@@ -14,7 +14,13 @@ class Location(DataW):
         return (f'{self.name} *')
     
     def validate(self):
-        print("validating loc")
+        # verifica se tem um lugar com o mesmo nome
+        same_name_list = DataW.get_items_with_field_value('Location', 'name', self.name)
+        if same_name_list:
+            if len(same_name_list) > 1 or same_name_list[0]['_id'] != self._id:
+                raise ValueError("Já existe uma localização com este nome")
+
+                
 
     def is_free_between(self, time_start: datetime, time_end: datetime, ignore: ObjectId):
         # pega as proprias atividades
