@@ -8,6 +8,7 @@ from authors import *
 from travel import *
 from activity import *
 from hosting import *
+from aditional_cost import *
 from status import get_status
 
 app = Flask(__name__)
@@ -32,6 +33,13 @@ def save_or_update_data(data_type, data_value, dataW_instance: DataW):
         error_msg = str(e)
         return(jsonify({'success': False, 'error_msg': "ERRO INTERNO: " + error_msg}))
     return(jsonify({'success': True, 'error_msg': "returned no error"}))
+
+@app.route('//add_aditional_cost//', methods=['POST'])
+def add_aditional_cost():
+    data = request.get_json()
+    value = data['value']
+    new_activity = AditionalCost(**value)
+    return save_or_update_data(data['type'], value, new_activity)
 
 @app.route('//add_trip//', methods=['POST'])
 def add_Trip():
