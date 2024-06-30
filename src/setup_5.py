@@ -4,6 +4,7 @@ from travel import *
 from activity import *
 from hosting import *
 from datetime import datetime
+from aditional_cost import AditionalCost
 
 
 wrapper_class.DEBUG = True
@@ -35,7 +36,43 @@ id_hosting = Hosting("Pousada padrão", 100, 200).save()
 
 # Criação de autores (simplificado, sem hospedagem)
 autores = {}
-for nome in ["Sarau Literário", "Beto Seabra", "Mauricio", "Clara Arreguy", "Aplam", "Luz Marina", "Rose Costa", "Célia", "Reconto", "Priscila Sabino e Amanda Luz", "Iris Borges", "Mediadora: Lariza Amélia Eloi", "Ana Neila", "ICAE Comunidade", "Liduina, Iris, Mauricio e Clara", "Turma do Caracol", "Débora Bianca", "Matrakaberta (Adriana Maciel)", "CHIQUITAS & BACANAS", "Angela", "André Cerino", "Tricontinando (Ana Neila, Rose Costa e Hozana)", "Hozana Costa", "Reconto (Liduina com o Grupo Reconto)", "Eraldo e Angela", "Iris Borges e Sérgio Pompeo", "Maria das Dores Brigagão", "Jacqueline de Mattos", "Débora Bianca", "Raquel", "Maria Amélia", "SANEAGO", "Marcia Lages", "Turma do Caracol ( Maria e André Cerino)", "Cinco escritoras mulheres da Flipiri", "Angela B. Café", "Diretoria da Casa de Autores e colaboradores / Marcelo Barra"]:
+for nome in [
+                "Sarau Literário",
+                "Beto Seabra",
+                "Mauricio", 
+                "Clara Arreguy", 
+                "Aplam", 
+                "Luz Marina", 
+                "Rose Costa", 
+                "Célia", 
+                "Reconto", 
+                "Priscila Sabino e Amanda Luz", 
+                "Iris Borges", 
+                "Mediadora: Lariza Amélia Eloi", 
+                "Ana Neila", 
+                "ICAE Comunidade", 
+                "Liduina, Iris, Mauricio e Clara", 
+                "Turma do Caracol", 
+                "Débora Bianca", 
+                "Matrakaberta (Adriana Maciel)",
+                "CHIQUITAS & BACANAS",
+                "Angela",
+                "André Cerino",
+                "Tricontinando (Ana Neila, Rose Costa e Hozana)",
+                "Hozana Costa", "Reconto (Liduina com o Grupo Reconto)",
+                "Eraldo e Angela", 
+                "Iris Borges e Sérgio Pompeo",
+                "Maria das Dores Brigagão",
+                "Jacqueline de Mattos",
+                "Raquel", 
+                "Maria Amélia", 
+                "SANEAGO", 
+                "Marcia Lages", 
+                "Turma do Caracol ( Maria e André Cerino)", 
+                "Cinco escritoras mulheres da Flipiri", 
+                "Angela B. Café", 
+                "Diretoria da Casa de Autores e colaboradores / Marcelo Barra"
+             ]:
     autores[nome] = Authors(nome, "Não especificado", id_hosting, datetime(1,1,1), datetime(9999,1,1)).save()
 
 # Criação de atividades
@@ -92,5 +129,7 @@ Activity("Show de Talentos", datetime(2023, 6, 15, 17, 0), datetime(2023, 6, 15,
 Activity("Cerimônia de Encerramento", datetime(2023, 6, 15, 20, 30), datetime(2023, 6, 15, 22, 30), [autores["Diretoria da Casa de Autores e colaboradores / Marcelo Barra"]], autores["Diretoria da Casa de Autores e colaboradores / Marcelo Barra"], id_praca, 0, 100, "Evento").save()
 
 id_trip1 = Trip("brasilia", "piri", datetime(2025, 6, 1), "carro", 10.0, [autores["Turma do Caracol"]]).save()
+
+aditional_cost = AditionalCost("Músicos", 50.0).save()
 
 print("ok")
