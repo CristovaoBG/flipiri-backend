@@ -106,9 +106,7 @@ Activity("Show Musical", datetime(2023, 6, 14, 20, 30), datetime(2023, 6, 14, 22
 
 # 15 de Junho
 Activity("Oficina de ilustração + Mesa - Encontro de Ilustradores", datetime(2023, 6, 15, 9, 0), datetime(2023, 6, 15, 12, 0), [autores["André Cerino"]], autores["André Cerino"], id_tenda2, 0, 100, "Oficina").save()
-Activity("Lançamento de livros", datetime(2023, 6, 15, 10, 0), datetime(2023, 6, 15, 13, 0), [], None, id_tenda, 0, 100, "Literatura").save()
 Activity("Leitura, Brincadeiras e Canções - Bebeteca", datetime(2023, 6, 15, 9, 0), datetime(2023, 6, 15, 10, 0), [autores["Tricontinando (Ana Neila, Rose Costa e Hozana)"]], autores["Tricontinando (Ana Neila, Rose Costa e Hozana)"], id_palco, 0, 5, "Atividade Infantil").save()
-Activity("Contação de histórias, brincadeiras e canções - Bebeteca", datetime(2023, 6, 15, 9, 0), datetime(2023, 6, 15, 10, 0), [], None, id_bebeteca, 0, 5, "Atividade Infantil").save()
 Activity("Contação de histórias - Bebeteca", datetime(2023, 6, 15, 10, 20), datetime(2023, 6, 15, 11, 0), [autores["Hozana Costa"]], autores["Hozana Costa"], id_bebeteca, 0, 5, "Contação de Histórias").save()
 Activity("Espetáculo", datetime(2023, 6, 15, 10, 0), datetime(2023, 6, 15, 11, 0), [autores["Reconto (Liduina com o Grupo Reconto)"]], autores["Reconto (Liduina com o Grupo Reconto)"], id_palco, 0, 5, "Espetáculo").save()
 Activity("Uns CAUSOS", datetime(2023, 6, 15, 11, 0), datetime(2023, 6, 15, 12, 0), [autores["Eraldo e Angela"]], autores["Eraldo e Angela"], id_teatro, 0, 100, "Apresentação").save()
@@ -128,8 +126,19 @@ Activity("Mesa de debates: o livro das Nossas Vidas", datetime(2023, 6, 15, 16, 
 Activity("Show de Talentos", datetime(2023, 6, 15, 17, 0), datetime(2023, 6, 15, 20, 0), [autores["Angela B. Café"]], autores["Angela B. Café"], id_praca, 0, 100, "Show").save()
 Activity("Cerimônia de Encerramento", datetime(2023, 6, 15, 20, 30), datetime(2023, 6, 15, 22, 30), [autores["Diretoria da Casa de Autores e colaboradores / Marcelo Barra"]], autores["Diretoria da Casa de Autores e colaboradores / Marcelo Barra"], id_praca, 0, 100, "Evento").save()
 
-id_trip1 = Trip("brasilia", "piri", datetime(2025, 6, 1), "carro", 10.0, [autores["Turma do Caracol"]]).save()
+id_trip1 = Trip("brasilia", "piri", datetime(2025, 6, 1), "aviao", 10.0, [autores["Turma do Caracol"]]).save()
+id_trip1 = Trip("piri", "brasilia", datetime(2025, 6, 10), "aviao", 10.0, [autores["Turma do Caracol"]]).save()
+id_trip1 = Trip("brasilia", "groenlândia", datetime(2025, 6, 11), "aviao", 10.0, [autores["Turma do Caracol"]]).save()
+id_trip1 = Trip("brasilia", "piri", datetime(2025, 6, 1), "carro", 10.0, [autores["Clara Arreguy"],autores["Aplam"],]).save()
+id_trip1 = Trip("piri", "brasilia", datetime(2025, 6, 10), "carro", 10.0, [autores["Clara Arreguy"],autores["Aplam"],autores["Rose Costa"]]).save()
 
+'''
+                "Clara Arreguy", 
+                "Aplam", 
+                "Luz Marina", 
+                "Rose Costa", 
+                "Célia", 
+'''
 aditional_cost = AditionalCost("Músicos", 50.0).save()
 
 print("ok")
