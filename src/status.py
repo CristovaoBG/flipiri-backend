@@ -43,7 +43,6 @@ def get_activity_by_author():
                     item.append(aad['act_name'])
             row.append(' & '.join(item))
         matrix.append(row)
-                
     y_label = ['author'] + y
     tabela = PrettyTable()
     tabela.field_names = y_label
@@ -103,7 +102,6 @@ def get_activity_by_location():
                     item.append(aad['act_name'])
             row.append(' & '.join(item))
         matrix.append(row)
-                
     y_label = ['location'] + y
     dict_list = []
     for row in matrix:
@@ -113,6 +111,33 @@ def get_activity_by_location():
     print('ok')
     return dict_list
 
+def trip_by_author():
+    authors_data = DataW.get_documents_from_class("Authors")
+    #ve todas as atividades que cada um dos autores vai atuar
+    trips_data = DataW.get_documents_from_class("Trip")
+    auth_and_dates = []
+    table = []
+    for auth in authors_data.keys():
+        trips = []
+        auth_name = authors_data[auth]['name']
+        for t in trips_data.values():
+            for p in t['passenger_list']:
+                if str(p) == auth:
+                    trips.append(t)
+                    break
+        trips.sort(key=lambda x:x['date'])
+        item = {}
+        item['author'] = auth_name
+        for i, trip in enumerate(trips):
+            item[f'Viagem {i+1}'] = f"{trip['transportation_type']} de {trip['origin']} para {trip['destiny']}"
+        table.append(item)
+    # poe rotulo nos restantes
+    max_travels = max(list(map(len, table)))
+    for r in table:
+        i = len(r)
+        for j in range(i,max_travels):
+            r[f'Viagem {j}'] = ""
+    return table
 
 
 
@@ -121,6 +146,9 @@ def get_status(status_key):
         return get_activity_by_author()
     elif status_key == "activity_by_location":
         return get_activity_by_location()
+    elif status_key == "trip_by_author":
+        return trip_by_author()
 
 if __name__ == "__main__":
-    get_status("atividade_por_autor")
+    output = get_status("trip_by_author")
+    pprint(output)
