@@ -1,11 +1,15 @@
 from wrapper_class import DataW
 from pprint import pprint
-from prettytable import PrettyTable
+from datetime import datetime
+
+def time_interval_to_str(time_1: datetime, time_2: datetime):
+    pass
 
 def get_activity_by_author():
     authors_data = DataW.get_documents_from_class("Authors")
     #ve todas as atividades que cada um dos autores vai atuar
     activities_data = DataW.get_documents_from_class("Activity")
+    location_data = DataW.get_documents_from_class("Location")
     auth_and_dates = []
     for id in activities_data.keys():
         for auth in activities_data[id]['authors']:
@@ -13,11 +17,16 @@ def get_activity_by_author():
             entry['auth_id'] = auth
             entry['date'] = activities_data[id]['date_start']
             entry['date_str'] = str(activities_data[id]['date_start'])[:10]
-            entry['act_name'] = activities_data[id]['name']
+            hours, minutes, _ = map(int, str(activities_data[id]['date_start'])[10:].split(':'))
+            hours_end, minutes_end, _ = map(int, str(activities_data[id]['date_end'])[10:].split(':'))
+            location_name = location_data[str(activities_data[id]['location'])]['name']
+            entry['act_name'] = f"<strong>{activities_data[id]['name']}</strong>" \
+                f" ({hours}h{minutes if minutes != 0 else ''}-" \
+                f"{hours_end}h{minutes_end if minutes_end != 0 else ''})" \
+                f"<br><small><small>{location_name}</small></small>"
             # entry['loc'] = activities_data[id]['location']
-            hours, _, _ = map(int, str(activities_data[id]['date_start'])[10:].split(':'))
-            entry['period'] = "MANHA" if hours < 12 else ("TARDE" if hours < 6 else "NOITE")
-            entry['y_value'] = f"{entry['date_str']} - {entry['period']}"
+            entry['period'] = "MANHA" if hours < 12 else ("TARDE" if hours < 18 else "NOITE")
+            entry['y_value'] = f"{entry['date_str'].replace('-','/')} - {entry['period']}"
             auth_and_dates.append(entry)
     auth_and_dates.sort(key = lambda x : x['date'])
     # varre todos os x e y
@@ -41,16 +50,9 @@ def get_activity_by_author():
                     aad['y_value'] == j
                     ):
                     item.append(aad['act_name'])
-            row.append(' & '.join(item))
+            row.append('<hr>'.join(item))
         matrix.append(row)
     y_label = ['author'] + y
-    tabela = PrettyTable()
-    tabela.field_names = y_label
-    # Adicionar linhas
-    for i in matrix:
-        tabela.add_row(i)
-    with open("output.txt", 'w') as arquivo:
-        arquivo.write(str(tabela))
     # coloca no formato de lista de dicionarios
     dict_list = []
     for row in matrix:
@@ -72,10 +74,13 @@ def get_activity_by_location():
         entry['loc_id'] = loc
         entry['date'] = activities_data[id]['date_start']
         entry['date_str'] = str(activities_data[id]['date_start'])[:10]
-        entry['act_name'] = activities_data[id]['name']
+        hours, minutes, _ = map(int, str(activities_data[id]['date_start'])[10:].split(':'))
+        hours_end, minutes_end, _ = map(int, str(activities_data[id]['date_end'])[10:].split(':'))
+        entry['act_name'] = f"<strong>{activities_data[id]['name']}</strong>" \
+                f" ({hours}h{minutes if minutes != 0 else ''}-" \
+                f"{hours_end}h{minutes_end if minutes_end != 0 else ''})" \
         # entry['loc'] = activities_data[id]['location']
-        hours, _, _ = map(int, str(activities_data[id]['date_start'])[10:].split(':'))
-        entry['period'] = "MANHA" if hours < 12 else ("TARDE" if hours < 6 else "NOITE")
+        entry['period'] = "MANHA" if hours < 12 else ("TARDE" if hours < 18 else "NOITE")
         entry['y_value'] = f"{entry['date_str']} - {entry['period']}"
         auth_and_dates.append(entry)
     auth_and_dates.sort(key = lambda x : x['date'])
@@ -100,7 +105,7 @@ def get_activity_by_location():
                     aad['y_value'] == j
                     ):
                     item.append(aad['act_name'])
-            row.append(' & '.join(item))
+            row.append('<hr>'.join(item))
         matrix.append(row)
     y_label = ['location'] + y
     dict_list = []
@@ -129,7 +134,10 @@ def trip_by_author():
         item = {}
         item['author'] = auth_name
         for i, trip in enumerate(trips):
-            item[f'Viagem {i+1}'] = f"{trip['transportation_type']} de {trip['origin']} para {trip['destiny']}"
+            item[f'Viagem {i+1}'] = f"{str(trip['date'].day).zfill(2)}/{str(trip['date'].month).zfill(2)} - " \
+                                    f"{trip['transportation_type']} " \
+                                    f"de {trip['origin']} " \
+                                    f"para {trip['destiny']}. " 
         table.append(item)
     # poe rotulo nos restantes
     max_travels = max(list(map(len, table)))
@@ -137,6 +145,7 @@ def trip_by_author():
         i = len(r)
         for j in range(i,max_travels):
             r[f'Viagem {j}'] = ""
+    table.sort(key=lambda x:x['author'])
     return table
 
 
