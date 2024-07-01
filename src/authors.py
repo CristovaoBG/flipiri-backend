@@ -62,10 +62,10 @@ class Authors(DataW): #TODO: pq plural?
         if self.departure < self.arrival:
             raise ValueError("Erro de datas. A data de chegada deve ser "
                             " anterior a data de partida.")
-        
         # verifica se tem um lugar com o mesmo nome
         same_name_list = DataW.get_items_with_field_value('Authors', 'name', self.name)
         if same_name_list:
             if len(same_name_list) > 1 or same_name_list[0]['_id'] != self._id:
                 raise ValueError(f"Já existe um autor com o nome '{self.name}'" )
+        return super().validate()
             

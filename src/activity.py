@@ -19,7 +19,7 @@ class Location(DataW):
         if same_name_list:
             if len(same_name_list) > 1 or same_name_list[0]['_id'] != self._id:
                 raise ValueError("Já existe uma localização com este nome")
-
+        return super().validate()
                 
 
     def is_free_between(self, time_start: datetime, time_end: datetime, ignore: ObjectId):
@@ -86,4 +86,5 @@ class Activity(DataW):
         if (not loc.is_free_between(self.date_start, self.date_end, ignore = self._id)):
             raise ValueError(f"O local \"{loc.name}\" "
                              "não estará vago nesse período")
+        return super().validate()
 

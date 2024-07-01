@@ -17,5 +17,6 @@ class AditionalCost(DataW):
         if same_name_list:
             if len(same_name_list) > 1 or same_name_list[0]['_id'] != self._id:
                 raise ValueError("Já existe um gasto adicional com este nome")
+        return super().validate()
 
                 

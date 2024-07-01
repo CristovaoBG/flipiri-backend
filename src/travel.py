@@ -17,5 +17,6 @@ class Trip(DataW):
     def validate(self):
         if not self.passenger_list:
             raise ValueError("Não há nenhum passageiro incluso na viagem.")
+        return super().validate()
         
  

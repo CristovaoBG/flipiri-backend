@@ -1,9 +1,10 @@
-from dataclasses import asdict
+from dataclasses import asdict, fields
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from bson import ObjectId
 from pprint import pprint
 from pymongo.errors import OperationFailure
+from utils import str_contains_html
 
 DEBUG = True
 
@@ -58,7 +59,11 @@ class DataW:
         return self.to_dict()['_id'].__repr__()
 
     def validate(self):
-        return
+        # verifica se tentou injetar html em alguma string dos campos
+        for f in fields(self):
+            if f.type == str:
+                if (str_contains_html(getattr(self, f.name))):
+                    raise ValueError("Uso indevido dos caracteres '<' e '>")
 
     @staticmethod
     def from_id(_id: ObjectId, globals_dic):
