@@ -13,4 +13,9 @@ class Trip(DataW):
     price: float
     passenger_list: list[ObjectId]
     _id: ObjectId = -1
+
+    def validate(self):
+        if not self.passenger_list:
+            raise ValueError("Não há nenhum passageiro incluso na viagem.")
+        
  
