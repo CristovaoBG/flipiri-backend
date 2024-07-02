@@ -51,7 +51,7 @@ class Activity(DataW):
     location: ObjectId
     age_range_start: int
     age_range_end: int
-    category: str
+    category: list[ObjectId]
     _id: ObjectId = -1
 
     def simplified_repr(self):
