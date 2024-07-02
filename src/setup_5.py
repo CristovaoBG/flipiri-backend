@@ -132,13 +132,26 @@ id_trip1 = Trip("brasilia", "groenlândia", datetime(2025, 6, 11), "aviao", 10.0
 id_trip1 = Trip("brasilia", "piri", datetime(2025, 6, 1), "carro", 10.0, [autores["Clara Arreguy"],autores["Aplam"],]).save()
 id_trip1 = Trip("piri", "brasilia", datetime(2025, 6, 10), "carro", 10.0, [autores["Clara Arreguy"],autores["Aplam"],autores["Rose Costa"]]).save()
 
-'''
-                "Clara Arreguy", 
-                "Aplam", 
-                "Luz Marina", 
-                "Rose Costa", 
-                "Célia", 
-'''
-aditional_cost = AditionalCost("Músicos", 50.0).save()
+
+AditionalCost("ABERTURA", 1000.0).save()
+AditionalCost("CACHÊ MÚSICOS / SARAU", 1200.0).save()
+AditionalCost("COMPRA DE LIVROS PARA ESCOLAS", 50000.0).save()
+AditionalCost("SITE GUTO", 3000.0).save()
+AditionalCost("JÚNIOR ARTES DAS PEÇAS", 2000.0).save()
+AditionalCost("SINALIZAÇÃO VISUAL", 3000.0).save()
+AditionalCost("OFICINAS", 8400.0).save()
+AditionalCost("MESAS", 9000.0).save()
+AditionalCost("BEBETECAS", 7700.0).save()
+AditionalCost("SONORIZAÇÃO SANTA BÁRBARA", 2500.0).save()
+AditionalCost("SONORIZAÇÃO DO CINEMA OU TEATRO", 4500.0).save()
+AditionalCost("TRANSMISSÃO DE", 3000.0).save()
+AditionalCost("PRODUÇÃO DE FOTO", 8000.0).save()
+AditionalCost("FOTÓGRAFO ITINERÂNCIA CAMPO", 500.0).save()
+AditionalCost("INTÉRPRETE DE LIBRAS", 3000.0).save()
+AditionalCost("CLIMATIZADOR CINEMA", 1200.0).save()
+AditionalCost("LIMPEZA", 1000.0).save()
+AditionalCost("RECEPÇÃO", 1600.0).save()
+AditionalCost("LOCAÇÃO DE CADEIRAS", 500.0).save()
+AditionalCost("IMPOSTO ICA", 3160.0).save()
 
 print("ok")
