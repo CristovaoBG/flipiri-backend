@@ -14,12 +14,12 @@ DataW.drop_hole_collecion()
 # Categorias
 id_itinerancia = Category("Itinerância", 500.0).save()
 id_debate = Category("Debate", 500.0).save()
-it_teatro = Category("Teatro", 500.0).save()
+id_teatro = Category("Teatro", 500.0).save()
 id_evento = Category("Evento", 500.0).save()
 
 # Criação de locais
 id_praca = Location("Praça / Zazá Café", "Praça Central").save()
-id_teatro = Location("Teatro de Pirenópolis", "Centro da Cidade").save()
+id_teatro_ = Location("Teatro de Pirenópolis", "Centro da Cidade").save()
 id_teatro2 = Location("Teatro de Pirenópolis 2", "Centro da Cidade").save()
 id_palco = Location("Palco - Centro de Artes e Música Itá", "Centro Cultural").save()
 id_palco2 = Location("Palco 2 - Centro de Artes e Música Itá", "Centro Cultural").save()
@@ -39,7 +39,7 @@ id_colegio3 = Location("Colégio Comendador Joaquim Alves - Sala 3", "Rua da Edu
 id_colegio4 = Location("Colégio Comendador Joaquim Alves - Sala 4", "Rua da Educação").save()
 id_bebeteca = Location("Bebeteca sala - Centro de Artes e Música Itá e Alaor", "Centro Cultural").save()
 
-id_hosting = Hosting("Pousada padrão", 100, 200).save()
+id_hosting = Hosting("Pousada padrão", 100, 50.0).save()
 
 # Criação de autores (simplificado, sem hospedagem)
 autores = {}
@@ -80,14 +80,14 @@ for nome in [
                 "Angela B. Café", 
                 "Diretoria da Casa de Autores e colaboradores / Marcelo Barra"
              ]:
-    autores[nome] = Authors(nome, "Não especificado", id_hosting, datetime(1,1,1), datetime(9999,1,1)).save()
+    autores[nome] = Authors(nome, "Não especificado", id_hosting, datetime(year=2023,month=6,day=12), datetime(year=2023,month=6,day=16)).save()
 
 # Criação de atividades
 # 12 de Junho
 Activity("Sarau Literário / Lançamento de livros", datetime(2023, 6, 12, 20, 0), datetime(2023, 6, 12, 22, 0), [autores["Sarau Literário"]], autores["Sarau Literário"], id_praca, 0, 100, id_teatro).save()
 
 # 13 de Junho
-Activity("Mesa de Debates: O que os Livros me Ensinaram", datetime(2023, 6, 13, 11, 0), datetime(2023, 6, 13, 13, 0), [autores["Beto Seabra"]], autores["Beto Seabra"], id_teatro, 0, 100, id_debate).save()
+Activity("Mesa de Debates: O que os Livros me Ensinaram", datetime(2023, 6, 13, 11, 0), datetime(2023, 6, 13, 13, 0), [autores["Beto Seabra"]], autores["Beto Seabra"], id_teatro_, 0, 100, id_debate).save()
 Activity("Mesa Russos", datetime(2023, 6, 13, 11, 0), datetime(2023, 6, 13, 13, 0), [autores["Mauricio"]], autores["Mauricio"], id_palco, 0, 100, id_debate).save()
 Activity("Mesa de Debates: O que os Livros trazem de Goiás", datetime(2023, 6, 13, 16, 0), datetime(2023, 6, 13, 18, 0), [autores["Clara Arreguy"]], autores["Clara Arreguy"], id_palco, 0, 100, id_debate).save()
 Activity("Lançamento de livro", datetime(2023, 6, 13, 17, 0), datetime(2023, 6, 13, 19, 0), [autores["Aplam"]], autores["Aplam"], id_tenda, 0, 100, id_evento).save()
@@ -116,7 +116,7 @@ Activity("Oficina de ilustração + Mesa - Encontro de Ilustradores", datetime(2
 Activity("Leitura, Brincadeiras e Canções - Bebeteca", datetime(2023, 6, 15, 9, 0), datetime(2023, 6, 15, 10, 0), [autores["Tricontinando (Ana Neila, Rose Costa e Hozana)"]], autores["Tricontinando (Ana Neila, Rose Costa e Hozana)"], id_palco, 0, 5, id_evento).save()
 Activity("Contação de histórias - Bebeteca", datetime(2023, 6, 15, 10, 20), datetime(2023, 6, 15, 11, 0), [autores["Hozana Costa"]], autores["Hozana Costa"], id_bebeteca, 0, 5, id_itinerancia).save()
 Activity("Espetáculo", datetime(2023, 6, 15, 10, 0), datetime(2023, 6, 15, 11, 0), [autores["Reconto (Liduina com o Grupo Reconto)"]], autores["Reconto (Liduina com o Grupo Reconto)"], id_palco, 0, 5, id_teatro).save()
-Activity("Uns CAUSOS", datetime(2023, 6, 15, 11, 0), datetime(2023, 6, 15, 12, 0), [autores["Eraldo e Angela"]], autores["Eraldo e Angela"], id_teatro, 0, 100, id_teatro).save()
+Activity("Uns CAUSOS", datetime(2023, 6, 15, 11, 0), datetime(2023, 6, 15, 12, 0), [autores["Eraldo e Angela"]], autores["Eraldo e Angela"], id_teatro_, 0, 100, id_teatro).save()
 Activity("Walking Tour", datetime(2023, 6, 15, 9, 0), datetime(2023, 6, 15, 11, 0), [autores["Iris Borges e Sérgio Pompeo"]], autores["Iris Borges e Sérgio Pompeo"], id_caminhada, 0, 100, id_evento).save()
 Activity("Oficina - A Fantástica Matemática", datetime(2023, 6, 15, 9, 0), datetime(2023, 6, 15, 11, 0), [autores["Maria das Dores Brigagão"]], autores["Maria das Dores Brigagão"], id_colegio, 0, 100, id_evento).save()
 Activity("Oficina - A literatura e suas múltiplas possibilidades", datetime(2023, 6, 15, 9, 0), datetime(2023, 6, 15, 11, 0), [autores["Jacqueline de Mattos"]], autores["Jacqueline de Mattos"], id_colegio2, 0, 100, id_evento).save()
@@ -124,7 +124,7 @@ Activity("Oficina - Leitura para a Cultura de Paz", datetime(2023, 6, 15, 9, 0),
 Activity("Oficina - Mediação de Leitura", datetime(2023, 6, 15, 9, 0), datetime(2023, 6, 15, 11, 0), [autores["Raquel"]], autores["Raquel"], id_colegio4, 0, 100, id_evento).save()
 Activity("Mesa", datetime(2023, 6, 15, 11, 0), datetime(2023, 6, 15, 13, 0), [autores["Maria Amélia"]], autores["Maria Amélia"], id_palco, 0, 100, id_debate).save()
 Activity("Espetáculo - Teatro Infantil", datetime(2023, 6, 15, 11, 30), datetime(2023, 6, 15, 12, 30), [autores["SANEAGO"]], autores["SANEAGO"], id_praca, 0, 12, id_teatro).save()
-Activity("Roda de conversa", datetime(2023, 6, 15, 14, 30), datetime(2023, 6, 15, 16, 30), [autores["Marcia Lages"]], autores["Marcia Lages"], id_teatro, 0, 100, id_debate).save()
+Activity("Roda de conversa", datetime(2023, 6, 15, 14, 30), datetime(2023, 6, 15, 16, 30), [autores["Marcia Lages"]], autores["Marcia Lages"], id_teatro_, 0, 100, id_debate).save()
 Activity("Espetáculo - Bebeteca", datetime(2023, 6, 15, 15, 0), datetime(2023, 6, 15, 16, 0), [autores["Matrakaberta (Adriana Maciel)"]], autores["Matrakaberta (Adriana Maciel)"], id_palco, 0, 5, id_teatro).save()
 Activity("Contação de histórias - Bebeteca", datetime(2023, 6, 15, 15, 0), datetime(2023, 6, 15, 15, 30), [autores["Hozana Costa"]], autores["Hozana Costa"], id_bebeteca, 0, 5, id_itinerancia).save()
 Activity("Contação de histórias - Bebeteca", datetime(2023, 6, 15, 15, 30), datetime(2023, 6, 15, 16, 0), [autores["Jacqueline de Mattos"]], autores["Jacqueline de Mattos"], id_bebeteca, 0, 5, id_itinerancia).save()
