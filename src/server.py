@@ -50,7 +50,7 @@ def add_aditional_cost():
     return save_or_update_data(data['type'], value, new_activity)
 
 @app.route('//add_trip//', methods=['POST'])
-def add_Trip():
+def add_trip():
     data = request.get_json()
     value = data['value']
     value['date'] = str_to_datetime(value['date'])
@@ -82,6 +82,20 @@ def add_author():
     new_activity = Authors(**value)
     return save_or_update_data(data['type'], value, new_activity)
 
+@app.route('/add_activity/', methods=['POST'])
+def add_activity():
+    data = request.get_json()
+    value = data['value']
+    # converte Ids
+    value['authors'] = [ObjectId(s['_id']) for s in value['authors']]
+    value['location'] = ObjectId(value['location']['_id'])
+    value['responsible_author'] = ObjectId(value['responsible_author']['_id'])
+    # converte datas
+    value['date_start'] = str_to_datetime(value['date_start'])
+    value['date_end'] = str_to_datetime(value['date_end'])
+    value['category'] = ObjectId(value['category']['_id'])
+    new_activity = Activity(**value)
+    return save_or_update_data(data['type'], data['value'], new_activity)
 
 @app.route('/get_item_from_id/', methods=['GET'])
 def get_item_from_id():
@@ -97,20 +111,6 @@ def delete_item():
     if count != 1:
         return {'success': False, 'error_msg': f"foram feitas {count} alterações."}
     return(jsonify({'success': True, 'error_msg': "returned no error"}))
-
-@app.route('/add_activity/', methods=['POST'])
-def add_activity():
-    data = request.get_json()
-    value = data['value']
-    # converte Ids
-    value['authors'] = [ObjectId(s['_id']) for s in value['authors']]
-    value['location'] = ObjectId(value['location']['_id'])
-    value['responsible_author'] = ObjectId(value['responsible_author']['_id'])
-    # converte datas
-    value['date_start'] = str_to_datetime(value['date_start'])
-    value['date_end'] = str_to_datetime(value['date_end'])
-    new_activity = Activity(**value)
-    return save_or_update_data(data['type'], data['value'], new_activity)
 
 @app.route('/test/', methods=['GET'])
 def get_simplified_representation():
@@ -134,6 +134,21 @@ def get_method():
 def post_method(): 
     data = request.get_json()
     print(data)
+    return jsonify({'message': f"Funcionando maneiro. data: {data}"})
+
+@app.route('/get_meal_price/', methods=['GET'])
+def get_meal_price():
+    _id = request.args.get('_id')    
+    price = DataW.get_meal_price()
+    data = DataW.format_to_frontend({"price": price})
+    return jsonify(data)
+
+@app.route('/set_meal_price/', methods=['POST'])
+def set_meal_price():
+    data = request.get_json()
+    #DataW.get_meal_price()
+    print(data)
+    DataW.set_meal_price(data['price'])
     return jsonify({'message': f"Funcionando maneiro. data: {data}"})
 
 if __name__ == '__main__':
