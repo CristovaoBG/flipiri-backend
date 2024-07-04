@@ -51,8 +51,14 @@ class Activity(DataW):
     location: ObjectId
     age_range_start: int
     age_range_end: int
-    category: list[ObjectId]
+    category: ObjectId
     _id: ObjectId = -1
+
+    def get_category(self) -> DataW:
+        from category import Category
+        from activity import Location
+        output: DataW = DataW.from_id(self.category, locals())
+        return output
 
     def simplified_repr(self):
         return (f'{self.name} *')

@@ -1,9 +1,13 @@
 from wrapper_class import DataW
 from pprint import pprint
 from datetime import datetime
+from authors import *
+from activity import *
+from utils import date_to_str_simple, time_to_str_simple
 
-def time_interval_to_str(time_1: datetime, time_2: datetime):
-    pass
+def money_to_str(v):
+    s = f"R$ {v:,.2f}"
+    return s.replace(",", "v").replace(".", ",").replace("v", ".")
 
 def get_activity_by_author():
     authors_data = DataW.get_documents_from_class("Authors")
@@ -50,7 +54,7 @@ def get_activity_by_author():
                     aad['y_value'] == j
                     ):
                     item.append(aad['act_name'])
-            row.append('<hr>'.join(item))
+            row.append('<hr color=\"#383838\">'.join(item))
         matrix.append(row)
     y_label = ['author'] + y
     # coloca no formato de lista de dicionarios
@@ -105,7 +109,7 @@ def get_activity_by_location():
                     aad['y_value'] == j
                     ):
                     item.append(aad['act_name'])
-            row.append('<hr>'.join(item))
+            row.append('<hr color=\"#383838\">'.join(item))
         matrix.append(row)
     y_label = ['location'] + y
     dict_list = []
@@ -116,13 +120,16 @@ def get_activity_by_location():
     print('ok')
     return dict_list
 
-def trip_by_author():
+def author_details():
     authors_data = DataW.get_documents_from_class("Authors")
+    activities_data = DataW.get_documents_from_class("Activity")
+    category_data = DataW.get_documents_from_class("Category")
     #ve todas as atividades que cada um dos autores vai atuar
     trips_data = DataW.get_documents_from_class("Trip")
-    auth_and_dates = []
     table = []
     for auth in authors_data.keys():
+        author_object: Authors = DataW.from_id_str(auth, globals())
+        # Viagens
         trips = []
         auth_name = authors_data[auth]['name']
         for t in trips_data.values():
@@ -131,33 +138,170 @@ def trip_by_author():
                     trips.append(t)
                     break
         trips.sort(key=lambda x:x['date'])
-        item = {}
-        item['author'] = auth_name
-        for i, trip in enumerate(trips):
-            item[f'Viagem {i+1}'] = f"{str(trip['date'].day).zfill(2)}/{str(trip['date'].month).zfill(2)} - " \
-                                    f"{trip['transportation_type']} " \
-                                    f"de {trip['origin']} " \
-                                    f"para {trip['destiny']}. " 
-        table.append(item)
-    # poe rotulo nos restantes
-    max_travels = max(list(map(len, table)))
-    for r in table:
-        i = len(r)
-        for j in range(i,max_travels):
-            r[f'Viagem {j}'] = ""
+        item = []
+        for trip in trips:
+            item.append(f"{date_to_str_simple(trip['date'])}: " \
+                        f"{trip['transportation_type']} " \
+                        f"de {trip['origin']} " \
+                        f"para {trip['destiny']}. " )
+        tripsStr = "<hr color=\"#383838\">".join(item)
+        # Atividades
+        auth_activities = []
+        for act in activities_data:
+            if auth in list(map(str,activities_data[act]['authors'])):
+                auth_activities.append(activities_data[act])
+        auth_activities_str = []
+        for act in auth_activities:
+            date = date_to_str_simple(act['date_start'])
+            time = time_to_str_simple(act['date_start'])
+            s = f"{act['name']}<br><small>({date} - {time})</small>"
+            auth_activities_str.append(s)
+        # Chegada e partida
+        arrival = author_object.arrival
+        departure = author_object.departure
+        # Add na tabela
+        table.append(
+            {
+            'author': auth_name,
+            'trips': tripsStr, 
+            'meals': author_object.count_meals(),
+            'overnights': author_object.count_overnights(),
+            'activities': "<hr color=\"#383838\">".join(auth_activities_str),
+            'times': f"{date_to_str_simple(arrival)}"
+                     f"<hr color=\"#383838\">"
+                     f"{date_to_str_simple(departure)}"
+            })
     table.sort(key=lambda x:x['author'])
     return table
 
+def total_costs():
+    activities_data = DataW.get_documents_from_class("Activity")
+    categories_data = DataW.get_documents_from_class("Category")
+    trips_data = DataW.get_documents_from_class("Trip")
+    authors_data = DataW.get_documents_from_class("Authors")
+    hosting_data = DataW.get_documents_from_class("Hosting")
+    # pega custos adicionais
+    aditional_costs = DataW.get_documents_from_class("AditionalCost")
+    table_aditional_costs = [
+        {
+            'name': ac['name'],
+            'cost': ac['cost']
+        }
+        for ac in aditional_costs.values()
+    ]
+    # gasto com atividades
+    # varre todas as atividades, olha o preco da categoria 
+    ac_values = activities_data.values()
+    categories_counter = {category: 0 for category in categories_data.keys()}
+    category_table = []
+    for category_id in categories_data.keys():
+        name = categories_data[category_id]['name']
+        price = categories_data[category_id]['price']
+        price_str = money_to_str(price)
+        acts = [ac for ac in ac_values if str(ac['category']) == category_id]
+        involved_people = []
+        for people in [p_list['authors'] for p_list in acts]:
+            for p in people:
+                involved_people.append(p)
+        categories_counter[category_id] += len(involved_people)
+        category_table.append({
+            'name': f"Eventos da categoria \"{name}\"<br>"
+                    f"<small><small>{price_str} "
+                    f"para {len(involved_people)} "
+                    f"envolvidos</small></small>",
+            'cost': len(involved_people)*price
+        })
+    # viagens
+    trips_price = sum([t['price'] for t in trips_data.values()])
+    table_trips = [{'name': 'Viagens', 'cost': trips_price}]
+    # hospedagem
+    hosting_cost = 0
+    for auth in authors_data.values():
+        overnight_cost = hosting_data[str(auth['hosting'])]['price']
+        overnights = auth['departure'].day - auth['arrival'].day
+        hosting_cost += overnight_cost * overnights
+    hosting_table = [{
+        'name': 'Hospedagens',
+        'cost': hosting_cost
+    }]
+    # alimentacao
+    authors: list[Authors] = []
+    for auth in authors_data.keys():
+        authors.append(DataW.from_id_str(auth, globals()))
+    meal_counter = 0
+    for auth in authors:
+        meal_counter += auth.count_meals()
+    meal_table = [{
+        'name': f"Alimentação<br>"
+                f"<small><small>"
+                f"{meal_counter} alimentação para {len(authors)} "
+                f"participantes</small></small>",
+        'cost': meal_counter * DataW.get_meal_price()
+    }]
+    # organiza, une e soma
+    table_aditional_costs.sort(key=lambda x:x['name'])
+    category_table.sort(key=lambda x:x['name'])
+    table_union = (
+        table_aditional_costs
+        + category_table
+        + table_trips
+        + hosting_table
+        + meal_table
+    )
+    total_costs = 0
+    for entry in table_union:
+        total_costs += entry['cost']
+        entry['cost'] = money_to_str(entry['cost'])
+    table_union.append({
+        'name': '<big><strong>TOTAL</strong></big>',
+        'cost': f'<big><strong>{money_to_str(total_costs)}</strong></big>'
+    })
+    return table_union
 
+def activity_costs():
+    activities_data = DataW.get_documents_from_class("Activity")
+    categories_data = DataW.get_documents_from_class("Category")
+    authors_data = DataW.get_documents_from_class("Authors")
+
+    table = []
+    total = 0
+    for act in activities_data.values():
+        # pega custo da categoria
+        cat_id = str(act['category'])
+        # auth_list = act['authors']
+        auth_names = [authors_data[str(a)]['name'] for a in act['authors']]
+        cat_name = categories_data[cat_id]['name']
+        cat_price = categories_data[cat_id]['price']
+        subtotal = len(auth_names) * cat_price
+        total += subtotal
+        table.append({
+            'name': act['name'],
+            'category': f'{cat_name}<br><small><small>{money_to_str(cat_price)} / participante</small></small>',
+            # 'value per author': money_to_str(cat_price),
+            'authors': ",<br>".join(auth_names),
+            'subtotal': money_to_str(subtotal)
+        })
+    table.append({
+        'name': '<big><strong>TOTAL:</strong></big>',
+        'category': '-',
+        'value per author': '-',
+        'authors': '-',
+        'subtotal': f'<big><strong>{money_to_str(total)}</strong></big>'
+})
+    return table
 
 def get_status(status_key):
     if status_key == "activity_by_author":
         return get_activity_by_author()
     elif status_key == "activity_by_location":
         return get_activity_by_location()
-    elif status_key == "trip_by_author":
-        return trip_by_author()
-
+    elif status_key == "author_details":
+        return author_details()
+    elif status_key == "total_costs":
+        return total_costs()
+    elif status_key == "activity_costs":
+        return activity_costs()
+    
 if __name__ == "__main__":
-    output = get_status("trip_by_author")
+    output = get_status("total_costs")
     pprint(output)

@@ -1,20 +1,14 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from bson import ObjectId
 from wrapper_class import DataW
 from bson import ObjectId
 from utils import datetimes_have_intersection
 
-
-# @dataclass
-# class Feeding(DataW):
-#     from_date: datetime
-#     to_date: datetime
-#     _id: ObjectId = -1
-#     def simplified_repr(self):
-#         dt = self.to_date - self.from_date
-#         dt_days = dt.days
-#         return (f'Alimentação para {dt_days} dias *')
+LUNCH_TIME_ALLOW_START = {'hour': 11, 'minute': 0}
+LUNCH_TIME_ALLOW_END = {'hour': 14, 'minute': 0} 
+DINNER_TIME_ALLOW_START = {'hour': 16, 'minute': 0}
+DINNER_TIME_ALLOW_END = {'hour': 23, 'minute': 0}
 
 
 @dataclass
@@ -30,15 +24,50 @@ class Authors(DataW): #TODO: pq plural?
     def simplified_repr(self):
         return (f'{self.name} *')
 
-    def get_author_activities_ids(self) ->list[str]:
-        docs = DataW.get_documents_from_class("Activity")
+    def get_author_activities_ids(self) -> list[str]:
+        docs = DataW.get_documents_from_class("Activity", {"authors": {"$in": [self._id]}})
         output = []
         for id, activity in docs.items(): 
             print(activity['authors'])
             if self._id in activity['authors']:
                 output.append(id)
         return output
+    
+    def get_author_activities(self) -> list[DataW]:
+        # tem que ser for, nao pode lista compreensiva
+        from activity import Activity
+        output = []
+        for act_id in self.get_author_activities_ids():
+            output.append(DataW.from_id_str(act_id, locals()))
+        return output
 
+
+    def count_meals(self) -> int:
+        # tem que ser for pq lista compreensiva estraga os locals
+        meal_counter = 0
+        # varre as refeicoes a partir da presenca ate a partida
+        # almoco
+        one_day = timedelta(days=1)
+        cursor_start = self.arrival.replace(**LUNCH_TIME_ALLOW_START)
+        cursor_end = self.arrival.replace(**LUNCH_TIME_ALLOW_END)
+        while (cursor_start < self.departure):
+            if datetimes_have_intersection(cursor_start, cursor_end, self.arrival, self.departure):
+                meal_counter += 1
+            cursor_start += one_day
+            cursor_end += one_day
+        # janta
+        cursor_start = self.arrival.replace(**DINNER_TIME_ALLOW_START)
+        cursor_end = self.departure.replace(**DINNER_TIME_ALLOW_END)
+        while (cursor_start < self.departure):
+            if datetimes_have_intersection(cursor_start, cursor_end, self.arrival, self.departure):
+                meal_counter += 1
+            cursor_start += one_day
+            cursor_end += one_day
+        return meal_counter
+    
+    def count_overnights(self) -> int:
+        return self.departure.day - self.arrival.day
+        
     def is_free_between(self, time_start: datetime, time_end: datetime, ignore: ObjectId):
         # pega as proprias atividades
         activity_id_list = self.get_author_activities_ids()

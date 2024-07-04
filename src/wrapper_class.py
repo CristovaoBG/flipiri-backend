@@ -66,6 +66,15 @@ class DataW:
                     raise ValueError("Uso indevido dos caracteres '<' e '>")
 
     @staticmethod
+    def set_meal_price(price):
+        collection.delete_many({"_class": "MealPrice"})
+        return collection.insert_one({"_class": "MealPrice", "price": price}).inserted_id
+    
+    @staticmethod
+    def get_meal_price():
+        return collection.find_one({"_class": "MealPrice"})['price']
+
+    @staticmethod
     def from_id(_id: ObjectId, globals_dic):
         doc = collection.find_one(_id)
         _class = globals_dic[doc['_class']]
@@ -120,15 +129,8 @@ class DataW:
 
 #TODO: apagar debug abaixo
 if __name__ == "__main__":
-    DataW.drop_hole_collecion()
-
-    # test = DataW.get_documents_from_class("Feeding")
-    # # pprint(test)
-    # print(DataW.get_every_class_name())
-
-    # DataW.get_items_with_field_value('Activity','category','sete')
-    # data = {'a': 'abc', 'b': [1, 2, ObjectId()]}
-    # DataW.format_to_frontend(data)
+    DataW.set_meal_price(10.5)
+    print(DataW.get_meal_price())
 
 
 
