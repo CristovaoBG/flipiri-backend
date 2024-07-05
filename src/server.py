@@ -160,5 +160,11 @@ def set_meal_price():
     DataW.set_meal_price(data['price'])
     return jsonify({'message': f"Funcionando maneiro. data: {data}"})
 
+@app.route('/')
+def debug_deploy():
+    return 'online'
+
 if __name__ == '__main__':
-    app.run(debug=True) 
+    #app.run(debug=False, host='0.0.0.0') 
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=5000, channel_timeout=600)
