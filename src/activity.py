@@ -10,8 +10,16 @@ class Location(DataW):
     address: str
     _id: ObjectId = -1
 
+    @staticmethod
+    def get_class_header(_ , language):
+        return ({
+            'translation': {'name': 'Nome', 'address': 'Endereço'},
+            'order': ['name', 'address'],
+            'language': "pt",
+        })
+
     def simplified_repr(self):
-        return (f'{self.name} *')
+        return (f'<i>{self.name}</i>')
     
     def validate(self):
         # verifica se tem um lugar com o mesmo nome
@@ -54,6 +62,24 @@ class Activity(DataW):
     category: ObjectId
     _id: ObjectId = -1
 
+    @staticmethod
+    def get_class_header(_, language):
+        return {
+            'translation': {
+                'name': 'Nome',
+                'date_start': 'Data de Início',
+                'date_end': 'Data de Término',
+                'authors': 'Autores',
+                'responsible_author': 'Autor Responsável',
+                'location': 'Local',
+                'age_range_start': 'Idade Mínima',
+                'age_range_end': 'Idade Máxima',
+                'category': 'Categoria'
+            },
+            'order': ['name', 'date_start', 'date_end', 'authors', 'responsible_author', 'location', 'age_range_start', 'age_range_end', 'category'],
+            'language': "pt",
+        }
+
     def get_category(self) -> DataW:
         from category import Category
         from activity import Location
@@ -61,7 +87,7 @@ class Activity(DataW):
         return output
 
     def simplified_repr(self):
-        return (f'{self.name} *')
+        return (f'<i>{self.name}<\i>')
     
     def validate(self):
         # raise KeyError("erro")

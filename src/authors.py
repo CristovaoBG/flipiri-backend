@@ -21,8 +21,22 @@ class Authors(DataW): #TODO: pq plural?
     departure: datetime
     _id: ObjectId = -1
 
+    @staticmethod
+    def get_class_header(_, language):
+        return {
+            'translation': {
+                'name': 'Nome',
+                'sex': 'Sexo',
+                'hosting': 'Hospedagem',
+                'arrival': 'Data de Chegada',
+                'departure': 'Data de Partida'
+            },
+            'order': ['name', 'sex', 'hosting', 'arrival', 'departure'],
+            'language': "pt",
+        }
+
     def simplified_repr(self):
-        return (f'{self.name} *')
+        return (f'<i>{self.name}</i>')
 
     def get_author_activities_ids(self) -> list[str]:
         docs = DataW.get_documents_from_class("Activity", {"authors": {"$in": [self._id]}})

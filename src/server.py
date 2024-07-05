@@ -124,6 +124,15 @@ def get_class():
     output = DataW.get_documents_from_class(class_name)
     return jsonify(DataW.format_to_frontend(output))
 
+@app.route('/get_class_header/', methods=['GET'])
+def get_class_header():
+    class_name = request.args.get('class_name')
+    language = request.args.get('language')
+    classe: DataW = globals()[class_name]
+    print(f"pegando header daclasse {class_name} em {language}")
+    output = classe.get_class_header(classe, language)
+    return jsonify(DataW.format_to_frontend(output))
+
 @app.route('/api/', methods=['GET'])
 def get_method():
     arg_value = request.args.get('argument_name')    

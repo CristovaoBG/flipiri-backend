@@ -10,8 +10,21 @@ class Hosting(DataW):
     vacancies: int = -1
     price: float = 0.0
     _id: ObjectId = -1
+
+    @staticmethod
+    def get_class_header(_, language):
+        return {
+            'translation': {
+                'name': 'Nome',
+                'vacancies': 'Vagas',
+                'price': 'Preço'
+            },
+            'order': ['name', 'vacancies', 'price'],
+            'language': "pt",
+        }
+
     def simplified_repr(self):
-        return (f'{self.name} *')
+        return (f'<i>{self.name}</i>')
 
     def validate(self):
         same_name_list = DataW.get_items_with_field_value('Hosting', 'name', self.name)

@@ -24,6 +24,7 @@ class DataW:
     def __post_init__(self):
         self._class = type(self).__name__
 
+
     def to_dict(self):
         js = asdict(self)
         js['_id'] = self._id
@@ -64,6 +65,22 @@ class DataW:
             if f.type == str:
                 if (str_contains_html(getattr(self, f.name))):
                     raise ValueError("Uso indevido dos caracteres '<' e '>")
+
+    @staticmethod
+    def get_class_header(self_class, language):
+        # se não tiver implementado no filho
+        # apenas cria com o mesmo nome maiúsculo
+        keys = [field.name for field in fields(self_class)]
+        upp_keys = [s.upper() for s in keys]
+        return {
+            'translation': {k: uk for k, uk in zip(keys, upp_keys)},
+            'order': DataW.get_class_key_order(self_class),
+            'language': "None"
+            }
+    
+    @staticmethod
+    def get_class_key_order(self_class):
+        return sorted([field.name for field in fields(self_class)])
 
     @staticmethod
     def set_meal_price(price):

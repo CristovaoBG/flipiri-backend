@@ -56,12 +56,13 @@ def get_activity_by_author():
                     item.append(aad['act_name'])
             row.append('<hr color=\"#383838\">'.join(item))
         matrix.append(row)
-    y_label = ['author'] + y
+    y_label = ['Autor'] + y
     # coloca no formato de lista de dicionarios
     dict_list = []
     for row in matrix:
         d = dict(zip(y_label, row))
         dict_list.append(d)
+    
     pprint(dict_list)
     print('ok')
     return dict_list
@@ -111,7 +112,7 @@ def get_activity_by_location():
                     item.append(aad['act_name'])
             row.append('<hr color=\"#383838\">'.join(item))
         matrix.append(row)
-    y_label = ['location'] + y
+    y_label = ['Localização'] + y
     dict_list = []
     for row in matrix:
         d = dict(zip(y_label, row))
@@ -140,10 +141,10 @@ def author_details():
         trips.sort(key=lambda x:x['date'])
         item = []
         for trip in trips:
-            item.append(f"{date_to_str_simple(trip['date'])}: " \
-                        f"{trip['transportation_type']} " \
+            item.append(f"{trip['transportation_type']} " \
                         f"de {trip['origin']} " \
-                        f"para {trip['destiny']}. " )
+                        f"para {trip['destiny']}. " \
+                        f"<br><small>{date_to_str_simple(trip['date'])}</small>")
         tripsStr = "<hr color=\"#383838\">".join(item)
         # Atividades
         auth_activities = []
@@ -162,16 +163,16 @@ def author_details():
         # Add na tabela
         table.append(
             {
-            'author': auth_name,
-            'trips': tripsStr, 
-            'meals': author_object.count_meals(),
-            'overnights': author_object.count_overnights(),
-            'activities': "<hr color=\"#383838\">".join(auth_activities_str),
-            'times': f"{date_to_str_simple(arrival)}"
+            'Autor': auth_name,
+            'Viagens': tripsStr, 
+            'Refeições': author_object.count_meals(),
+            'Pernoites': author_object.count_overnights(),
+            'Atividades': "<hr color=\"#383838\">".join(auth_activities_str),
+            'Chegada / Partida': f"{date_to_str_simple(arrival)}"
                      f"<hr color=\"#383838\">"
                      f"{date_to_str_simple(departure)}"
             })
-    table.sort(key=lambda x:x['author'])
+    table.sort(key=lambda x:x['Autor'])
     return table
 
 def total_costs():
@@ -184,8 +185,8 @@ def total_costs():
     aditional_costs = DataW.get_documents_from_class("AditionalCost")
     table_aditional_costs = [
         {
-            'name': ac['name'],
-            'cost': ac['cost']
+            'Nome': ac['name'],
+            'Custo': ac['cost']
         }
         for ac in aditional_costs.values()
     ]
@@ -205,15 +206,15 @@ def total_costs():
                 involved_people.append(p)
         categories_counter[category_id] += len(involved_people)
         category_table.append({
-            'name': f"Eventos da categoria \"{name}\"<br>"
+            'Nome': f"Eventos da categoria \"{name}\"<br>"
                     f"<small><small>{price_str} "
                     f"para {len(involved_people)} "
                     f"envolvidos</small></small>",
-            'cost': len(involved_people)*price
+            'Custo': len(involved_people)*price
         })
     # viagens
     trips_price = sum([t['price'] for t in trips_data.values()])
-    table_trips = [{'name': 'Viagens', 'cost': trips_price}]
+    table_trips = [{'Nome': 'Viagens', 'Custo': trips_price}]
     # hospedagem
     hosting_cost = 0
     for auth in authors_data.values():
@@ -221,8 +222,8 @@ def total_costs():
         overnights = auth['departure'].day - auth['arrival'].day
         hosting_cost += overnight_cost * overnights
     hosting_table = [{
-        'name': 'Hospedagens',
-        'cost': hosting_cost
+        'Nome': 'Hospedagens',
+        'Custo': hosting_cost
     }]
     # alimentacao
     authors: list[Authors] = []
@@ -232,15 +233,15 @@ def total_costs():
     for auth in authors:
         meal_counter += auth.count_meals()
     meal_table = [{
-        'name': f"Alimentação<br>"
+        'Nome': f"Alimentação<br>"
                 f"<small><small>"
                 f"{meal_counter} alimentação para {len(authors)} "
                 f"participantes</small></small>",
-        'cost': meal_counter * DataW.get_meal_price()
+        'Custo': meal_counter * DataW.get_meal_price()
     }]
     # organiza, une e soma
-    table_aditional_costs.sort(key=lambda x:x['name'])
-    category_table.sort(key=lambda x:x['name'])
+    table_aditional_costs.sort(key=lambda x:x['Nome'])
+    category_table.sort(key=lambda x:x['Nome'])
     table_union = (
         table_aditional_costs
         + category_table
@@ -250,11 +251,11 @@ def total_costs():
     )
     total_costs = 0
     for entry in table_union:
-        total_costs += entry['cost']
-        entry['cost'] = money_to_str(entry['cost'])
+        total_costs += entry['Custo']
+        entry['Custo'] = money_to_str(entry['Custo'])
     table_union.append({
-        'name': '<big><strong>TOTAL</strong></big>',
-        'cost': f'<big><strong>{money_to_str(total_costs)}</strong></big>'
+        'Nome': '<big><strong>TOTAL</strong></big>',
+        'Custo': f'<big><strong>{money_to_str(total_costs)}</strong></big>'
     })
     return table_union
 
@@ -275,18 +276,18 @@ def activity_costs():
         subtotal = len(auth_names) * cat_price
         total += subtotal
         table.append({
-            'name': act['name'],
-            'category': f'{cat_name}<br><small><small>{money_to_str(cat_price)} / participante</small></small>',
+            'Nome': act['name'],
+            'Categoria': f'{cat_name}<br><small><small>{money_to_str(cat_price)} / participante</small></small>',
             # 'value per author': money_to_str(cat_price),
-            'authors': ",<br>".join(auth_names),
-            'subtotal': money_to_str(subtotal)
+            'Autores': ",<br>".join(auth_names),
+            'Subtotal': money_to_str(subtotal)
         })
     table.append({
-        'name': '<big><strong>TOTAL:</strong></big>',
-        'category': '-',
-        'value per author': '-',
-        'authors': '-',
-        'subtotal': f'<big><strong>{money_to_str(total)}</strong></big>'
+        'Nome': '<big><strong>TOTAL:</strong></big>',
+        'categoria': '-',
+        'Valor por autor': '-',
+        'autores': '-',
+        'Subtotal': f'<big><strong>{money_to_str(total)}</strong></big>'
 })
     return table
 

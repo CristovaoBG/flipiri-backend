@@ -8,8 +8,19 @@ class AditionalCost(DataW):
     cost: float = 0.0
     _id: ObjectId = -1
 
+    @staticmethod
+    def get_class_header(_, language):
+        return {
+            'translation': {
+                'name': 'Nome',
+                'cost': 'Custo'
+            },
+            'order': ['name', 'cost'],
+            'language': "pt",
+        }
+
     def simplified_repr(self):
-        return (f'{self.name} *')
+        return (f'<i>{self.name}</i>')
     
     def validate(self):
         # verifica se tem um lugar com o mesmo nome
