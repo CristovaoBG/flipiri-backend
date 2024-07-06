@@ -5,11 +5,28 @@ from bson import ObjectId
 from pprint import pprint
 from pymongo.errors import OperationFailure
 from utils import str_contains_html
+import os, sys
 
 DEBUG = True
 
-with open('./key.txt', 'r') as file:
-    uri = file.readline().strip()
+# tenta pegar chave da base de alguma das 3 formas:
+if len(sys.argv) == 2:
+    uri = sys.argv[1]
+    print('key from CLI argument')
+try:
+    # tenta pegar do arquivo
+    with open('./key.txt', 'r') as file:
+        uri = file.readline().strip()
+    print('Key from key.txt file')
+except FileNotFoundError:
+    # pega da variavel de ambiente
+    uri = os.getenv('FLIPIRI_K')
+    if uri:
+        print('Key from environment variable FLIPIRI_K')
+    else:
+        raise KeyError("Chave da base de dados não encontrada")
+print(f"Key: {uri}")
+
 
 try:
     client = MongoClient(uri, server_api=ServerApi('1'))
