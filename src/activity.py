@@ -16,6 +16,7 @@ class Location(DataW):
             'translation': {'name': 'Nome', 'address': 'Endereço'},
             'order': ['name', 'address'],
             'language': "pt",
+            'class_name': "Localizações"
         })
 
     def simplified_repr(self):
@@ -77,7 +78,8 @@ class Activity(DataW):
                 'category': 'Categoria'
             },
             'order': ['name', 'date_start', 'date_end', 'authors', 'responsible_author', 'location', 'age_range_start', 'age_range_end', 'category'],
-            'language': "pt",
+            'language': 'pt',
+            'class_name': 'Atividades'
         }
 
     def get_category(self) -> DataW:

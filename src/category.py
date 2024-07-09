@@ -13,7 +13,8 @@ class Category(DataW):
         return {
             'translation': {'name': 'Nome', 'price': 'Preço'},
             'order': ['name', 'price'],
-            'language': "pt",
+            'language': 'pt',
+            'class_name': 'Categorias'
         }
 
     def simplified_repr(self):

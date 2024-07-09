@@ -26,7 +26,8 @@ class Trip(DataW):
                 'passenger_list': 'Lista de Passageiros'
             },
             'order': ['origin', 'destiny', 'date', 'transportation_type', 'price', 'passenger_list'],
-            'language': "pt",
+            'language': 'pt',
+            'class_name': 'Viagens'
         }
 
     def validate(self):

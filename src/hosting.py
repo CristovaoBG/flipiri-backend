@@ -20,7 +20,8 @@ class Hosting(DataW):
                 'price': 'Preço'
             },
             'order': ['name', 'vacancies', 'price'],
-            'language': "pt",
+            'language': 'pt',
+            'class_name': 'Hospedagem'
         }
 
     def simplified_repr(self):

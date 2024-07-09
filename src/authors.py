@@ -32,7 +32,8 @@ class Authors(DataW): #TODO: pq plural?
                 'departure': 'Data de Partida'
             },
             'order': ['name', 'sex', 'hosting', 'arrival', 'departure'],
-            'language': "pt",
+            'language': 'pt',
+            'class_name': 'Autores'
         }
 
     def simplified_repr(self):

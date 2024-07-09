@@ -16,7 +16,8 @@ class AditionalCost(DataW):
                 'cost': 'Custo'
             },
             'order': ['name', 'cost'],
-            'language': "pt",
+            'language': 'pt',
+            'class_name': 'Custos Adicionais'
         }
 
     def simplified_repr(self):

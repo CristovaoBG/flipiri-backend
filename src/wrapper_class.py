@@ -41,7 +41,6 @@ class DataW:
     def __post_init__(self):
         self._class = type(self).__name__
 
-
     def to_dict(self):
         js = asdict(self)
         js['_id'] = self._id
@@ -92,7 +91,8 @@ class DataW:
         return {
             'translation': {k: uk for k, uk in zip(keys, upp_keys)},
             'order': DataW.get_class_key_order(self_class),
-            'language': "None"
+            'language': 'None',
+            'class_name': ''
             }
     
     @staticmethod
