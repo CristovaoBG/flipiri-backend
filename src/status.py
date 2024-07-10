@@ -20,7 +20,6 @@ def get_activity_by_author():
             entry = {}
             entry['auth_id'] = auth
             entry['date'] = activities_data[id]['date_start']
-            entry['date_str'] = str(activities_data[id]['date_start'])[:10]
             hours, minutes, _ = map(int, str(activities_data[id]['date_start'])[10:].split(':'))
             hours_end, minutes_end, _ = map(int, str(activities_data[id]['date_end'])[10:].split(':'))
             location_name = location_data[str(activities_data[id]['location'])]['name']
@@ -30,7 +29,7 @@ def get_activity_by_author():
                 f"<br><small><small>{location_name}</small></small>"
             # entry['loc'] = activities_data[id]['location']
             entry['period'] = "MANHA" if hours < 12 else ("TARDE" if hours < 18 else "NOITE")
-            entry['y_value'] = f"{entry['date_str'].replace('-','/')} - {entry['period']}"
+            entry['y_value'] = f"{date_to_str_simple(entry['date'])} - {entry['period']}"
             auth_and_dates.append(entry)
     auth_and_dates.sort(key = lambda x : x['date'])
     # varre todos os x e y
@@ -78,7 +77,6 @@ def get_activity_by_location():
         entry = {}
         entry['loc_id'] = loc
         entry['date'] = activities_data[id]['date_start']
-        entry['date_str'] = str(activities_data[id]['date_start'])[:10]
         hours, minutes, _ = map(int, str(activities_data[id]['date_start'])[10:].split(':'))
         hours_end, minutes_end, _ = map(int, str(activities_data[id]['date_end'])[10:].split(':'))
         entry['act_name'] = f"<strong>{activities_data[id]['name']}</strong>" \
@@ -86,7 +84,7 @@ def get_activity_by_location():
                 f"{hours_end}h{minutes_end if minutes_end != 0 else ''})" \
         # entry['loc'] = activities_data[id]['location']
         entry['period'] = "MANHA" if hours < 12 else ("TARDE" if hours < 18 else "NOITE")
-        entry['y_value'] = f"{entry['date_str']} - {entry['period']}"
+        entry['y_value'] = f"{date_to_str_simple(entry['date'])} - {entry['period']}"
         auth_and_dates.append(entry)
     auth_and_dates.sort(key = lambda x : x['date'])
     # varre todos os x e y
